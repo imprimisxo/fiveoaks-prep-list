@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Dinners sit under a 64-character fingerprint of the kitchen code. Kitchens
+    // can't be listed, so only devices that know the code can reach the dinners.
+    // "service" is a reserved word in the rules language, so the dinner's id is {dinner}.
+    match /kitchens/{kitchen}/services/{dinner} {
+      allow read, delete: if kitchen.size() == 64;
+      allow create, update: if kitchen.size() == 64
+        && request.resource.data.keys().hasOnly(['host', 'date', 'guests', 'salad', 'meal', 'dessert', 'created'])
+        && request.resource.data.host is string && request.resource.data.host.size() <= 80
+        && request.resource.data.date is string && request.resource.data.date.size() == 10
+        && request.resource.data.guests is number && request.resource.data.guests > 0 && request.resource.data.guests <= 500;
+    }
+  }
+}

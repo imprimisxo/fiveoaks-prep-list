@@ -203,7 +203,8 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
 .save-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .save-status { color: var(--muted); }
 
-.status { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+.status-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; border-top: 1px solid var(--line); padding-top: 8px; }
+.status { color: var(--muted); font-size: 14px; flex: 1 1 260px; }
 
 @media (max-width: 620px) {
   .fields { grid-template-columns: 1fr 1fr; }
@@ -231,6 +232,21 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
       <h2 id="servicesTitle">Dinner Services</h2>
       <button type="button" class="btn primary" id="addBtn" data-action="new"><span class="plus" aria-hidden="true">+</span> Add Guest/Date</button>
     </div>
+
+    <form class="panel" id="kitchenForm" hidden novalidate>
+      <div class="panel-head">
+        <h3>Open your kitchen</h3>
+        <p>Type the kitchen code once on this device. Every phone, iPad and computer opened with the same code shares one dinner list.</p>
+      </div>
+      <div class="field">
+        <label for="kitchenInput">Kitchen code</label>
+        <input id="kitchenInput" name="kitchen" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="At least 12 characters, like three words">
+        <span class="error" id="kitchenError" hidden></span>
+      </div>
+      <div class="actions">
+        <button type="submit" class="btn primary">Open Kitchen</button>
+      </div>
+    </form>
 
     <form class="panel" id="guestForm" hidden novalidate>
       <div class="panel-head">
@@ -269,7 +285,10 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
     <div class="panel" id="buildPanel"></div>
   </section>
 
-  <p class="status" id="status" role="status"></p>
+  <div class="status-row">
+    <p class="status" id="status" role="status"></p>
+    <button type="button" class="btn quiet" id="changeKitchen" data-action="change-kitchen" hidden>Change kitchen code</button>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/docx@9.8.1/dist/index.iife.min.js"></script>
@@ -279,7 +298,13 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
   const P = window.FiveOaksPrep;
   const $ = (sel) => document.querySelector(sel);
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const use = (name) => (window.claude && typeof window.claude.use === 'function') ? window.claude.use(name) : Promise.resolve(null);
+  // Inside claude.ai the page stores dinners and saves files through Claude. Anywhere else
+  // (the GitHub Pages site) it uses Firebase when firebase-config.json is published beside
+  // it, and downloads the .docx directly.
+  const inClaude = !!(window.claude && typeof window.claude.use === 'function');
+  const use = (name) => inClaude ? window.claude.use(name) : Promise.resolve(null);
+  const FIREBASE_SDK = 'https://www.gstatic.com/firebasejs/10.12.2/';
+  const CODE_KEY = 'fiveoaks-kitchen-code';
 
   const todayKey = P.ymd(new Date());
   const dateOf = (key) => P.parseYMD(key);
@@ -292,7 +317,7 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
   const state = {
     menu: null,
     items: [],            // dinner services: { id, host, date, guests, salad, meal, dessert }
-    mode: 'loading',      // loading | shared | local | error
+    mode: 'loading',      // loading | shared (Claude) | firebase | kitchen (needs the code) | local | error
     readOnly: false,
     formFor: null,        // 'new' or a service id while the guest form is open
     menuFor: null,        // service id whose menu is being picked
@@ -303,7 +328,7 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
     saveStatus: '',
     notice: '',
   };
-  let col = null, downloads = null, logoBytes = null;
+  let col = null, downloads = null, logoBytes = null, fsdb = null, unsubscribe = null;
   const writeQueue = {};
 
   // ---- Menu choices, read from menu.json -----------------------------------
@@ -356,40 +381,47 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
     return { late: false, text: lead.minutes >= 60 ? `Day-of prep, from ${hoursText(lead.minutes)} before` : 'Day-of prep' };
   };
 
-  // ---- Storage: the artifact's shared store, or this page only ---------------
+  // ---- Storage: Firebase, the artifact's shared store, or this page only -------
   const writeError = (e) => {
     const code = e && e.code;
     if (code === 'invalid_argument') {
       state.readOnly = true;
       state.notice = 'You can view these dinners but not change them. Ask the page owner for edit access.';
-    } else if (code === 'quota_exceeded') {
-      state.notice = 'The dinner list is full. Remove past dinners, then try again.';
+    } else if (code === 'permission-denied') {
+      state.notice = 'The database turned that change down. Ask Claude to check the Firebase rules.';
+    } else if (code === 'quota_exceeded' || code === 'resource-exhausted') {
+      state.notice = 'The dinner list is full for now. Remove past dinners, or try again tomorrow.';
     } else {
       state.notice = "Couldn't save that change. Check the connection and try again.";
     }
     render();
   };
+  // Every change shows on the page at once; the store confirms it in the background.
+  // Firestore keeps writes in order and queues them while the kitchen Wi-Fi is down, so
+  // nothing here waits on the network.
   const store = {
-    async add(data) {
-      if (col) { const ref = col.doc(); await ref.set(data); return ref.id; }
-      const id = 'local-' + Math.random().toString(36).slice(2, 10);
+    add(data) {
+      const ref = col ? col.doc() : null;
+      const id = ref ? ref.id : 'local-' + Math.random().toString(36).slice(2, 10);
       state.items.push({ id, ...data });
+      if (ref) {
+        const created = ref.set(data).catch(writeError);
+        if (!fsdb) writeQueue[id] = created;   // Claude's store needs the dinner to exist before an update
+      }
       return id;
     },
     update(id, patch) {
-      if (col) {
-        // One write at a time per dinner.
-        const next = (writeQueue[id] || Promise.resolve()).then(() => col.doc(id).update(patch));
-        writeQueue[id] = next.catch(() => {});
-        return next;
-      }
       const it = state.items.find((i) => i.id === id);
       if (it) Object.assign(it, patch);
-      return Promise.resolve();
+      if (!col) return;
+      if (fsdb) { col.doc(id).update(patch).catch(writeError); return; }
+      // Claude's store: one write at a time per dinner.
+      const next = (writeQueue[id] || Promise.resolve()).then(() => col.doc(id).update(patch));
+      writeQueue[id] = next.catch(writeError);
     },
-    async remove(id) {
-      if (col) await col.doc(id).delete();
-      else state.items = state.items.filter((i) => i.id !== id);
+    remove(id) {
+      state.items = state.items.filter((i) => i.id !== id);
+      if (col) col.doc(id).delete().catch(writeError);
     },
   };
 
@@ -453,6 +485,7 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
 
   const renderList = () => {
     const el = $('#serviceList');
+    if (state.mode === 'kitchen') { el.innerHTML = ''; return; }
     if (state.mode === 'loading') {
       el.innerHTML = `<div class="empty"><strong>Loading saved dinners</strong><span>Your booked dinner services will show here.</span></div>`;
       return;
@@ -507,6 +540,7 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
   const renderBuild = () => {
     const el = $('#buildPanel');
     if (!state.menu) { el.innerHTML = '<p>Loading the menu.</p>'; return; }
+    if (state.mode === 'kitchen') { el.innerHTML = '<p>Open your kitchen above to see its dinners and build their prep list.</p>'; return; }
     const list = included();
     const unfinished = list.filter((s) => !isComplete(s));
     let summary;
@@ -544,8 +578,8 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
         <thead><tr><th>Prep day</th><th>Dinner that night</th><th class="num">Past due</th><th class="num">Advance</th><th class="num">Timeline</th><th>Text</th></tr></thead>
         <tbody>${rows}</tbody></table></div>
       <div class="save-row">
-        <button type="button" class="btn primary" data-action="save" data-key="save" ${downloads ? '' : 'disabled'}>Save Prep List (.docx)</button>
-        <span class="save-status">${esc(downloads ? state.saveStatus || r.filename : 'Saving files works when this page is open in Claude.')}</span>
+        <button type="button" class="btn primary" data-action="save" data-key="save" ${canSave() ? '' : 'disabled'}>Save Prep List (.docx)</button>
+        <span class="save-status">${esc(canSave() ? state.saveStatus || r.filename : 'Saving files works when this page is open in Claude.')}</span>
       </div>
     </div>`;
   };
@@ -554,10 +588,13 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
     const msg = {
       loading: 'Connecting to saved dinners\u2026',
       shared: 'Dinners save as you go. Everyone you share this page with sees the same list.',
+      firebase: 'Dinners save as you go. Every device opened with this kitchen code sees the same list.',
+      kitchen: 'Enter the kitchen code to load your dinners.',
       local: "This view can't save. Dinners added here last until the page closes.",
-      error: "Saved dinners couldn't load. Reload the page to try again.",
+      error: "Saved dinners couldn't load. Check the connection and reload the page.",
     }[state.mode];
     $('#status').textContent = state.notice || msg;
+    $('#changeKitchen').hidden = state.mode !== 'firebase';
   };
 
   const render = () => {
@@ -566,7 +603,8 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
     renderList();
     renderBuild();
     renderStatus();
-    $('#addBtn').disabled = state.readOnly || state.mode === 'loading' || !state.menu;
+    $('#addBtn').disabled = state.readOnly || state.mode === 'loading' || state.mode === 'kitchen' || !state.menu;
+    $('#kitchenForm').hidden = state.mode !== 'kitchen';
     if (key) { const again = document.querySelector(`[data-key="${CSS.escape(key)}"]`); if (again) again.focus(); }
   };
 
@@ -611,18 +649,63 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
     const firstBad = Object.keys(errs).find((n) => errs[n]);
     if (firstBad) { $(`#${firstBad}Input`).focus(); return; }
     const id = state.formFor;
-    try {
-      let target = id;
-      if (id === 'new') target = await store.add({ host, date, guests, salad: null, meal: null, dessert: null, created: new Date().toISOString() });
-      else await store.update(id, { host, date, guests });
-      state.excluded.delete(target);
-      closeForm();
-      state.menuFor = target;
-      state.notice = '';
+    let target = id;
+    if (id === 'new') target = store.add({ host, date, guests, salad: null, meal: null, dessert: null, created: new Date().toISOString() });
+    else store.update(id, { host, date, guests });
+    state.excluded.delete(target);
+    closeForm();
+    state.menuFor = target;
+    state.notice = '';
+    render();
+    const panel = $('#menuPanel .panel');
+    if (panel) { panel.scrollIntoView({ block: 'start', behavior: 'smooth' }); const first = panel.querySelector('.choice'); if (first) first.focus({ preventScroll: true }); }
+  });
+
+  // ---- Kitchen code (Firebase site only) ---------------------------------------
+  const readCode = () => { try { return localStorage.getItem(CODE_KEY) || ''; } catch (e) { return ''; } };
+  const writeCode = (v) => { try { if (v) localStorage.setItem(CODE_KEY, v); else localStorage.removeItem(CODE_KEY); } catch (e) { /* lasts this visit only */ } };
+  const normCode = (s) => String(s || '').trim().toLowerCase().replace(/\s+/g, ' ');
+  // The code never leaves the device. Firestore only sees its SHA-256 fingerprint, which
+  // names the kitchen's folder of dinners; the rules refuse to list those folders.
+  const kitchenKey = async (code) => {
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('fiveoaks-prep-planner:' + code));
+    return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  };
+  const subscribe = (collection, mode) => {
+    if (unsubscribe) unsubscribe();
+    col = collection;
+    unsubscribe = col.onSnapshot((snap) => {
+      state.items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      state.mode = mode;
       render();
-      const panel = $('#menuPanel .panel');
-      if (panel) { panel.scrollIntoView({ block: 'start', behavior: 'smooth' }); const first = panel.querySelector('.choice'); if (first) first.focus({ preventScroll: true }); }
-    } catch (e) { writeError(e); }
+    }, () => { state.mode = 'error'; render(); });
+  };
+  const openKitchen = async (code) => {
+    const key = await kitchenKey(code);
+    writeCode(code);
+    Object.assign(state, { items: [], result: null, menuFor: null, mode: 'loading', notice: '' });
+    render();
+    subscribe(fsdb.collection('kitchens').doc(key).collection('services'), 'firebase');
+  };
+  const leaveKitchen = () => {
+    if (unsubscribe) unsubscribe();
+    unsubscribe = null; col = null;
+    writeCode('');
+    closeForm();
+    Object.assign(state, { items: [], result: null, menuFor: null, mode: 'kitchen', notice: '' });
+    render();
+    $('#kitchenInput').focus();
+  };
+  $('#kitchenForm').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const input = $('#kitchenInput'), err = $('#kitchenError');
+    const code = normCode(input.value);
+    const bad = code.length < 12 ? 'Use at least 12 characters, for example three words.' : '';
+    input.setAttribute('aria-invalid', bad ? 'true' : 'false');
+    err.textContent = bad; err.hidden = !bad;
+    if (bad) { input.focus(); return; }
+    input.value = '';
+    try { await openKitchen(code); } catch (e) { state.mode = 'error'; render(); }
   });
 
   // ---- Build and save ---------------------------------------------------------
@@ -663,9 +746,20 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
       render();
     }
   };
+  // In Claude a save goes through the downloads capability; outside it, a plain download.
+  const canSave = () => !!downloads || !inClaude;
   const save = async () => {
     const r = state.result;
-    if (!r || !downloads) return;
+    if (!r || !canSave()) return;
+    if (!downloads) {
+      const url = URL.createObjectURL(r.blob);
+      const a = Object.assign(document.createElement('a'), { href: url, download: r.filename });
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      state.saveStatus = `Downloaded ${r.filename}.`;
+      render();
+      return;
+    }
     try {
       const res = await downloads.save({ filename: r.filename, data: r.blob });
       state.saveStatus = res && res.status === 'delivered' ? `Sent ${r.filename}.` : `Saved ${r.filename}.`;
@@ -697,9 +791,7 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
       case 'pick': {
         const s = state.items.find((i) => i.id === state.menuFor);
         if (!s || state.readOnly) break;
-        const patch = { [el.dataset.field]: el.dataset.value };
-        if (col) Object.assign(s, patch);   // show the pick now; the store confirms it
-        store.update(s.id, patch).catch(writeError);
+        store.update(s.id, { [el.dataset.field]: el.dataset.value });
         render();
         break;
       }
@@ -708,12 +800,13 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
       case 'remove':
         state.confirmRemove = null;
         if (state.menuFor === id) state.menuFor = null;
-        try { await store.remove(id); } catch (e) { writeError(e); }
+        store.remove(id);
         render();
         $('#addBtn').focus();
         break;
       case 'build': build(); break;
       case 'save': save(); break;
+      case 'change-kitchen': leaveKitchen(); break;
     }
   });
   document.addEventListener('change', (ev) => {
@@ -730,14 +823,41 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
   fetch('menu.json').then((r) => r.json()).then((m) => { state.menu = m; render(); })
     .catch(() => { state.notice = "The menu couldn't load. Reload the page to try again."; render(); });
   use('downloads').then((d) => { downloads = d; render(); });
-  use('db').then((db) => {
-    if (!db) { state.mode = 'local'; render(); return; }
-    col = db.collection('services');
-    col.onSnapshot((snap) => {
-      state.items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-      state.mode = 'shared';
-      render();
-    }, () => { state.mode = 'error'; render(); });
+
+  const loadScript = (src) => new Promise((resolve, reject) => {
+    const s = Object.assign(document.createElement('script'), { src });
+    s.onload = resolve;
+    s.onerror = () => reject(new Error(`Couldn't load ${src}`));
+    document.head.appendChild(s);
   });
+  const startFirebase = async (config) => {
+    await loadScript(FIREBASE_SDK + 'firebase-app-compat.js');
+    await loadScript(FIREBASE_SDK + 'firebase-firestore-compat.js');
+    firebase.initializeApp(config);
+    fsdb = firebase.firestore();
+    // A copy on the device, so the list opens and picks queue when the Wi-Fi drops.
+    try { await fsdb.enablePersistence({ synchronizeTabs: true }); } catch (e) { /* private window: online only */ }
+    const code = readCode();
+    if (code.length >= 12) await openKitchen(code);
+    else { state.mode = 'kitchen'; render(); $('#kitchenInput').focus(); }
+  };
+  const startStorage = async () => {
+    if (!inClaude) {
+      const config = await fetch('firebase-config.json', { cache: 'no-store' })
+        .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+      if (config && config.projectId) {
+        try { await startFirebase(config); } catch (e) {
+          state.mode = 'error';
+          state.notice = "The dinner list couldn't connect. Check the internet connection and reload the page.";
+          render();
+        }
+        return;
+      }
+    }
+    const db = await use('db');
+    if (!db) { state.mode = 'local'; render(); return; }
+    subscribe(db.collection('services'), 'shared');
+  };
+  startStorage();
 })();
 </script>

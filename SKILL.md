@@ -40,7 +40,9 @@ say "per SOP"; those SOPs live in `/Users/cheflance/Five_Oaks/SOP/`.
 | `scripts/prep_core.js` | The scheduling and document code itself, shared by the generator and the web app |
 | `scripts/render_docx.sh` | Renders a .docx through Microsoft Word to PDF and page PNGs |
 | `scripts/stage_webapp.sh` | Gathers the web app and the files it loads into one folder for publishing |
+| `scripts/publish_site.sh` | Pushes the staged web app to the no-login website (GitHub Pages) |
 | `webapp/index.html` | The Prep Planner web app (see "Web app" below) |
+| `webapp/firestore.rules` | The website database's access rules, pasted into the Firebase console |
 | `references/selection_menu.md` | The salad or soup, dinner, and dessert selection menu shown when Chef gives a host and date |
 | `assets/FiveOaksLogo.png` | Green FIVE OAKS mallard wordmark, 700 x 204 |
 
@@ -279,8 +281,15 @@ Things not to undo, each one bought back page space:
 ## Web app
 
 Chef asked for this on 2026-10-23: a page he can open from any device to enter bookings
-and build the prep list himself. It's a private claude.ai artifact, the **Five Oaks Prep
-Planner**: https://claude.ai/artifact/VjxfPZT27CMgeCd3JU81ez
+and build the prep list himself. The same page, `webapp/index.html`, runs in two places:
+
+| Where | Login | Dinners are saved in |
+|---|---|---|
+| **Website**, https://imprimisxo.github.io/fiveoaks-prep-planner/ | None, just a kitchen code once per device | Firebase Firestore, shared by every device that uses the same kitchen code |
+| **Claude artifact**, https://claude.ai/artifact/VjxfPZT27CMgeCd3JU81ez | claude.ai | The artifact's database |
+
+The website is Chef's main way in. He asked for it the same day because the Claude login
+was slow. The artifact still works.
 
 - **Flow:** the Five Oaks logo at the top, then an **Add Guest/Date** button. It opens a
   form for Host (the host sponsor), Dinner Date, and Number of Guests, with an **Add Dinner
@@ -295,24 +304,41 @@ Planner**: https://claude.ai/artifact/VjxfPZT27CMgeCd3JU81ez
   the same 33,857-byte .docx in the browser and from `build_prep_list.js`. The page
   always uses the brand fonts, and it can't make the PDF, since that needs Word on
   Chef's Mac.
-- **Bookings live in the artifact's database**, collection `services`, one document per
-  dinner: `host`, `date` (YYYY-MM-DD), `guests`, `salad` (key or `none`), `meal` (`"1"`
-  to `"5"`), `dessert` (key or `none`), `created`. A course still `null` hasn't been
-  picked. When Chef asks for the PDF of what he entered, read them with ArtifactData
-  `list` on that URL and run them through Steps 2 to 5.
+- **Website storage.** Outside Claude the page fetches `firebase-config.json` from beside
+  it and loads the Firebase compat SDK 10.12.2 from gstatic. On a device's first visit
+  it asks for the kitchen code (at least 12 characters; trimmed, lowercased, spaces
+  collapsed) and keeps it in that browser. Dinners live at
+  `kitchens/<SHA-256 of "fiveoaks-prep-planner:" + code>/services/<id>`, so the code itself
+  never leaves the device. `webapp/firestore.rules` allows only that 64-character path
+  and the dinner fields, and nothing can list `kitchens`, so the code is what keeps the
+  list private. The Firebase project is `fiveoaks-prep` on Chef's Google account (free
+  Spark plan, Firestore in nam5, Gemini and Analytics off), set up 2026-10-23. Paste the
+  rules into its console (Firestore, Rules tab) after any change. Don't name a path
+  wildcard `{service}`: `service` is a reserved word there, and the rules won't compile.
+  **Change kitchen code** in the footer forgets the code on that device.
+  Firestore keeps an offline copy, so the list opens and edits queue when the Wi-Fi drops.
+- **Website files.** The public repo `imprimisxo/fiveoaks-prep-planner` holds only staged
+  copies: `index.html`, `prep_core.js`, `menu.json`, the logo, `firebase-config.json`
+  and `.nojekyll`. Never edit it directly. `webapp/firebase-config.json` is the Firebase
+  web config. It is public by design: it only tells browsers where the database is.
+- **Dinner fields**, the same in both stores, one document per dinner: `host`, `date`
+  (YYYY-MM-DD), `guests`, `salad` (key or `none`), `meal` (`"1"` to `"5"`), `dessert`
+  (key or `none`), `created`. A course that is still `null` hasn't been picked. When Chef
+  wants the PDF of artifact dinners, read them with ArtifactData `list` on the artifact
+  URL. Website dinners are out of Claude's reach unless Chef shares his kitchen code, so
+  ask him for the dinners instead. Then run them through Steps 2 to 5.
 - **Republish after any change** to `menu.json`, `prep_core.js`, or `webapp/index.html`,
-  or the page keeps the old menu. Stage the files into the scratchpad, then publish the
-  staged `index.html` with the other three as `files`. Pass the URL above as `url` (read
-  the artifact first if this conversation hasn't), and leave `capabilities` out so the
-  stored `db` and `downloads` carry over:
-
-  ```bash
-  ~/.claude/skills/fiveoaks-prep-list/scripts/stage_webapp.sh <scratchpad>/prep-app
-  ```
-
-- **Keep `prep_core.js` ASCII outside comments.** Write `½` as `\u00BD` in code. A
-  server that doesn't declare UTF-8 makes the browser misread it, and every "-3 ½
-  hours" task then fails to parse.
+  or the pages keep the old menu.
+  - Website: run `scripts/publish_site.sh "<commit message>"`. It clones the site repo,
+    stages the files, and pushes. GitHub Pages updates in about a minute.
+  - Artifact: stage the files into the scratchpad with `scripts/stage_webapp.sh
+    <scratchpad>/prep-app`, then publish the staged `index.html` with `prep_core.js`,
+    `menu.json` and `FiveOaksLogo.png` as `files`. Pass the artifact URL as `url` (read
+    the artifact first if this conversation hasn't), and leave `capabilities` out so the
+    stored `db` and `downloads` carry over.
+- **Keep `prep_core.js` and the page ASCII outside comments.** Write `½` as the escape
+  backslash-u00BD in code. A server that doesn't declare UTF-8 makes the browser misread
+  it, and every "-3 ½ hours" task then fails to parse.
 
 ## Changing the menu
 
