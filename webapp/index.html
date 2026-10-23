@@ -1,0 +1,743 @@
+<title>Five Oaks Prep Planner</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:ital,wght@0,400;0,500;0,600;1,400&family=Oswald:wght@500;600&display=swap">
+<style>
+/* Layout: one clipboard column. The logo masthead, the dinner list as tickets tinted like
+   the printed sheet's service bands, then the build step. Five Oaks palette and the
+   Oswald + IBM Plex Sans Condensed pairing, same as the printed prep sheets. */
+:root {
+  --bg: #f4f6f3;
+  --surface: #ffffff;
+  --ink: #24302b;
+  --muted: #5b6963;
+  --line: #d3dcd7;
+  --brand: #407060;
+  --on-brand: #ffffff;
+  --brand-soft: #e7efeb;
+  --band: #f3ece4;
+  --rule: #c49e76;
+  --warn: #9a4a1c;
+  --warn-soft: #f9ebe1;
+  --focus: #2f6fb0;
+  --font-display: "Oswald", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --font-body: "IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111714; --surface: #19211d; --ink: #e2e9e5; --muted: #9caba4; --line: #2d3a34;
+    --brand: #82b5a1; --on-brand: #0e1613; --brand-soft: #1e2d27; --band: #2a241c; --rule: #c49e76;
+    --warn: #eba27a; --warn-soft: #37241a; --focus: #7fb2e6;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111714; --surface: #19211d; --ink: #e2e9e5; --muted: #9caba4; --line: #2d3a34;
+  --brand: #82b5a1; --on-brand: #0e1613; --brand-soft: #1e2d27; --band: #2a241c; --rule: #c49e76;
+  --warn: #eba27a; --warn-soft: #37241a; --focus: #7fb2e6;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.45;
+}
+.wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+  display: grid;
+  gap: 32px;
+}
+h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 600; color: var(--brand); text-wrap: balance; }
+p { margin: 0; }
+[hidden] { display: none !important; }
+button, input { font: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* ---- Masthead ---- */
+.masthead { display: grid; gap: 18px; }
+.logo {
+  width: min(340px, 82%);
+  aspect-ratio: 700 / 204;
+  max-width: 100%;
+  margin: 0 auto;
+  background: var(--brand);
+  -webkit-mask: url("FiveOaksLogo.png") center / contain no-repeat;
+  mask: url("FiveOaksLogo.png") center / contain no-repeat;
+}
+.titlebar {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--rule);
+}
+.titlebar h1 { font-size: 28px; letter-spacing: 0.02em; }
+.titlebar p { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---- Section heads and buttons ---- */
+.section { display: grid; gap: 16px; }
+.section-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.section-head h2 { font-size: 21px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 8px 18px;
+  font-family: var(--font-display); font-weight: 500; font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--brand); background: transparent; border: 1.5px solid var(--brand); border-radius: 6px;
+  cursor: pointer;
+}
+.btn:hover { background: var(--brand-soft); }
+.btn.primary { background: var(--brand); color: var(--on-brand); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.quiet { border-color: transparent; color: var(--muted); padding-inline: 10px; }
+.btn.quiet:hover { color: var(--ink); background: var(--brand-soft); }
+.btn.danger { border-color: var(--warn); color: var(--warn); }
+.btn.danger:hover { background: var(--warn-soft); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; filter: none; }
+.btn .plus { font-size: 20px; line-height: 1; margin-top: -2px; }
+
+/* ---- Panels: the guest form and the menu selection ---- */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px;
+  display: grid;
+  gap: 20px;
+}
+.panel-head { display: grid; gap: 2px; }
+.panel-head h3 { font-size: 19px; }
+.panel-head p { color: var(--muted); }
+.fields { display: grid; grid-template-columns: 2fr 1.5fr 1fr; gap: 14px; }
+.field { display: grid; gap: 6px; align-content: start; min-width: 0; }
+.field label { font-weight: 600; font-size: 14px; }
+.field input {
+  width: 100%; box-sizing: border-box; min-height: 44px; padding: 8px 12px;
+  color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px;
+}
+.field input[aria-invalid="true"] { border-color: var(--warn); }
+.field .error { color: var(--warn); font-size: 14px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; align-items: center; }
+
+.course { display: grid; gap: 10px; }
+.course-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.course-head h4 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink); }
+.course-head span { color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+.choices { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.choice {
+  display: grid; grid-template-columns: 1.6em 1fr; gap: 2px 8px; align-content: start;
+  min-height: 64px; padding: 12px 14px; text-align: left;
+  color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  cursor: pointer;
+}
+.choice:hover { border-color: var(--brand); }
+.choice .num { grid-row: span 3; font-family: var(--font-display); font-size: 20px; line-height: 1.2; color: var(--brand); }
+.choice .name { font-weight: 600; line-height: 1.25; }
+.choice .sub { font-size: 14px; color: var(--muted); }
+.choice .lead { font-size: 13px; color: var(--muted); font-style: italic; }
+.choice .lead.late { color: var(--warn); font-style: normal; font-weight: 600; }
+.choice.none { min-height: 0; align-self: start; color: var(--muted); }
+.choice[aria-pressed="true"] { border-color: var(--brand); background: var(--brand-soft); box-shadow: inset 0 0 0 1px var(--brand); }
+.choice[aria-pressed="true"] .num::after { content: " \2713"; font-size: 15px; }
+.choice.none[aria-pressed="true"] { color: var(--ink); }
+
+/* ---- Dinner tickets ---- */
+.tickets { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.ticket { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.ticket.open { border-color: var(--brand); }
+.ticket-band {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px;
+  padding: 10px 16px; background: var(--band);
+}
+.ticket-band strong { font-family: var(--font-display); font-weight: 500; font-size: 18px; color: var(--brand); }
+.ticket-band span { font-weight: 600; font-variant-numeric: tabular-nums; }
+.ticket-body { padding: 12px 16px 14px; display: grid; gap: 12px; }
+.ticket-host { font-weight: 600; font-size: 17px; }
+.courses { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 0; }
+.courses dt { color: var(--muted); font-size: 14px; padding-top: 1px; }
+.courses dd { margin: 0; min-width: 0; }
+.missing { color: var(--warn); font-weight: 600; }
+.late-note { color: var(--warn); font-size: 14px; }
+.ticket-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; border-top: 1px solid var(--line); padding-top: 10px; }
+.ticket-actions .spacer { flex: 1; }
+.include { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; min-height: 44px; cursor: pointer; }
+.include input { width: 20px; height: 20px; accent-color: var(--brand); }
+.confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; width: 100%; }
+.confirm p { flex: 1 1 200px; font-weight: 600; }
+
+.empty {
+  border: 1.5px dashed var(--line); border-radius: 10px; padding: 22px 20px;
+  display: grid; gap: 6px; color: var(--muted);
+}
+.empty strong { color: var(--ink); font-size: 17px; }
+details.past { color: var(--muted); }
+details.past summary { cursor: pointer; padding: 6px 0; }
+details.past .tickets { margin-top: 10px; }
+
+/* ---- Build ---- */
+.build { display: grid; gap: 14px; }
+.build-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.build-row p { flex: 1 1 260px; min-width: 0; }
+.hint { color: var(--warn); }
+.result { display: grid; gap: 14px; border-top: 1px solid var(--line); padding-top: 16px; }
+.result-head { font-size: 17px; }
+.result-head strong { font-family: var(--font-display); font-weight: 500; color: var(--brand); font-size: 20px; }
+.stale { color: var(--warn); font-weight: 600; }
+.notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.notes li { padding: 8px 12px; border-radius: 6px; background: var(--brand-soft); }
+.notes li.alert { background: var(--warn-soft); color: var(--ink); }
+.notes li.alert b { color: var(--warn); }
+.table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+table.sheets { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 15px; }
+table.sheets th, table.sheets td { padding: 7px 12px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.sheets th { font-family: var(--font-display); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; font-size: 13px; color: var(--on-brand); background: var(--brand); }
+table.sheets td.num, table.sheets th.num { text-align: right; }
+table.sheets tr:last-child td { border-bottom: 0; }
+table.sheets tr:nth-child(even) td { background: var(--brand-soft); }
+table.sheets td.tonight { white-space: normal; min-width: 160px; }
+.save-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.save-status { color: var(--muted); }
+
+.status { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+
+@media (max-width: 620px) {
+  .fields { grid-template-columns: 1fr 1fr; }
+  .fields .field:first-child { grid-column: 1 / -1; }
+  .titlebar h1 { font-size: 24px; }
+  .panel { padding: 16px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .panel, .result { animation: rise 160ms ease-out; }
+  @keyframes rise { from { transform: translateY(4px); opacity: 0.6; } to { transform: none; opacity: 1; } }
+}
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="logo" role="img" aria-label="Five Oaks"></div>
+    <div class="titlebar">
+      <h1>Prep Planner</h1>
+      <p id="todayLine"></p>
+    </div>
+  </header>
+
+  <main class="section" aria-labelledby="servicesTitle">
+    <div class="section-head">
+      <h2 id="servicesTitle">Dinner Services</h2>
+      <button type="button" class="btn primary" id="addBtn" data-action="new"><span class="plus" aria-hidden="true">+</span> Add Guest/Date</button>
+    </div>
+
+    <form class="panel" id="guestForm" hidden novalidate>
+      <div class="panel-head">
+        <h3 id="formTitle">New dinner service</h3>
+        <p>Who it's for, the night it's served, and how many are eating.</p>
+      </div>
+      <div class="fields">
+        <div class="field">
+          <label for="hostInput">Host</label>
+          <input id="hostInput" name="host" type="text" autocomplete="off" placeholder="Host or sponsor name">
+          <span class="error" id="hostError" hidden></span>
+        </div>
+        <div class="field">
+          <label for="dateInput">Dinner Date</label>
+          <input id="dateInput" name="date" type="date">
+          <span class="error" id="dateError" hidden></span>
+        </div>
+        <div class="field">
+          <label for="guestsInput">Number of Guests</label>
+          <input id="guestsInput" name="guests" type="number" inputmode="numeric" min="1" max="200" step="1" placeholder="12">
+          <span class="error" id="guestsError" hidden></span>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn quiet" data-action="cancel-form">Cancel</button>
+        <button type="submit" class="btn primary" id="submitBtn">Add Dinner Service</button>
+      </div>
+    </form>
+
+    <div id="menuPanel"></div>
+    <div id="serviceList"></div>
+  </main>
+
+  <section class="section build" aria-labelledby="buildTitle">
+    <div class="section-head"><h2 id="buildTitle">Prep List</h2></div>
+    <div class="panel" id="buildPanel"></div>
+  </section>
+
+  <p class="status" id="status" role="status"></p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/docx@9.8.1/dist/index.iife.min.js"></script>
+<script src="prep_core.js"></script>
+<script>
+(() => {
+  const P = window.FiveOaksPrep;
+  const $ = (sel) => document.querySelector(sel);
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const use = (name) => (window.claude && typeof window.claude.use === 'function') ? window.claude.use(name) : Promise.resolve(null);
+
+  const todayKey = P.ymd(new Date());
+  const dateOf = (key) => P.parseYMD(key);
+  const longDay = (key) => P.longDate(dateOf(key)).replace(/, \d{4}$/, '');   // "Friday, November 6"
+  const shortDay = (key) => P.shortDate(dateOf(key));                          // "Fri 11/6"
+  const daysUntil = (key) => Math.round((dateOf(key) - dateOf(todayKey)) / 864e5);
+  const addDaysKey = (key, n) => { const d = dateOf(key); d.setDate(d.getDate() + n); return P.ymd(d); };
+  const clock = (hhmm) => { const [h, m] = hhmm.split(':').map(Number); return `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`; };
+
+  const state = {
+    menu: null,
+    items: [],            // dinner services: { id, host, date, guests, salad, meal, dessert }
+    mode: 'loading',      // loading | shared | local | error
+    readOnly: false,
+    formFor: null,        // 'new' or a service id while the guest form is open
+    menuFor: null,        // service id whose menu is being picked
+    confirmRemove: null,  // service id waiting on "Remove?"
+    excluded: new Set(),  // services unticked from the prep list
+    result: null,         // last build
+    building: false,
+    saveStatus: '',
+    notice: '',
+  };
+  let col = null, downloads = null, logoBytes = null;
+  const writeQueue = {};
+
+  // ---- Menu choices, read from menu.json -----------------------------------
+  const COURSES = [
+    { field: 'salad', label: 'Salad or Soup', time: 'salad', none: 'No salad or soup' },
+    { field: 'meal', label: 'Main Course', time: 'dinner' },
+    { field: 'dessert', label: 'Dessert', time: 'dessert', none: 'No dessert' },
+  ];
+  const choicesFor = (field) => {
+    const m = state.menu;
+    if (field === 'salad') {
+      return Object.entries(m.salads_soups).map(([key, d]) => ({ key, num: d.number, title: d.name, sub: '', comps: d.components, short: d.short }));
+    }
+    if (field === 'meal') {
+      return Object.entries(m.meals).map(([key, d]) => {
+        const [main, ...sides] = d.name.split(', ');
+        return { key, num: key, title: main, sub: sides.map((s) => s.replace(/^and /, '')).join(' \u00B7 '), comps: d.components, short: `#${key} ${d.short}` };
+      });
+    }
+    return Object.entries(m.desserts).map(([key, d]) => {
+      const i = d.name.indexOf(' with ');
+      return { key, title: i > 0 ? d.name.slice(0, i) : d.name, sub: i > 0 ? d.name.slice(i + 6).replace(/ and /g, ' \u00B7 ') : '', comps: d.components, short: d.short };
+    });
+  };
+  const choiceOf = (field, key) => (key && key !== 'none') ? choicesFor(field).find((c) => c.key === String(key)) : null;
+
+  // How far ahead the earliest task for a dish starts, from Chef's offsets in menu.json.
+  const leadOf = (comps) => {
+    let days = 0, minutes = 0;
+    for (const name of comps) {
+      for (const line of state.menu.components[name].tasks) {
+        const t = P.parseTask(line, name);
+        if (t.days != null) days = Math.max(days, -t.days); else minutes = Math.max(minutes, -t.minutes);
+      }
+    }
+    return { days, minutes };
+  };
+  const hoursText = (min) => {
+    const h = min / 60, whole = Math.floor(h), frac = { 0.25: '\u00BC', 0.5: '\u00BD', 0.75: '\u00BE' }[h - whole] || '';
+    return `${whole || ''}${frac || (whole ? '' : h)} hour${h > 1 ? 's' : ''}`;
+  };
+  const leadLine = (lead, dateKey) => {
+    if (lead.days) {
+      const left = dateKey ? daysUntil(dateKey) : null;
+      if (left != null && lead.days > left) {
+        return { late: true, text: `Needs ${lead.days} days of prep, ${left === 0 ? 'dinner is today' : `${left} day${left === 1 ? '' : 's'} left`}` };
+      }
+      return { late: false, text: `Prep starts ${lead.days} day${lead.days === 1 ? '' : 's'} ahead` };
+    }
+    return { late: false, text: lead.minutes >= 60 ? `Day-of prep, from ${hoursText(lead.minutes)} before` : 'Day-of prep' };
+  };
+
+  // ---- Storage: the artifact's shared store, or this page only ---------------
+  const writeError = (e) => {
+    const code = e && e.code;
+    if (code === 'invalid_argument') {
+      state.readOnly = true;
+      state.notice = 'You can view these dinners but not change them. Ask the page owner for edit access.';
+    } else if (code === 'quota_exceeded') {
+      state.notice = 'The dinner list is full. Remove past dinners, then try again.';
+    } else {
+      state.notice = "Couldn't save that change. Check the connection and try again.";
+    }
+    render();
+  };
+  const store = {
+    async add(data) {
+      if (col) { const ref = col.doc(); await ref.set(data); return ref.id; }
+      const id = 'local-' + Math.random().toString(36).slice(2, 10);
+      state.items.push({ id, ...data });
+      return id;
+    },
+    update(id, patch) {
+      if (col) {
+        // One write at a time per dinner.
+        const next = (writeQueue[id] || Promise.resolve()).then(() => col.doc(id).update(patch));
+        writeQueue[id] = next.catch(() => {});
+        return next;
+      }
+      const it = state.items.find((i) => i.id === id);
+      if (it) Object.assign(it, patch);
+      return Promise.resolve();
+    },
+    async remove(id) {
+      if (col) await col.doc(id).delete();
+      else state.items = state.items.filter((i) => i.id !== id);
+    },
+  };
+
+  // ---- Derived lists ---------------------------------------------------------
+  const sorted = () => [...state.items].sort((a, b) => (a.date || '').localeCompare(b.date || '') || String(a.host).localeCompare(String(b.host)));
+  const upcoming = () => sorted().filter((s) => s.date >= todayKey);
+  const past = () => sorted().filter((s) => s.date < todayKey).reverse();
+  const isComplete = (s) => s.meal != null && s.salad != null && s.dessert != null;
+  const included = () => upcoming().filter((s) => !state.excluded.has(s.id));
+  const requestFor = (list) => ({
+    services: list.map((s) => ({ date: s.date, host: s.host, guests: s.guests, salad: s.salad, meal: s.meal, dessert: s.dessert })),
+    // Chef's standing preference: make the cheesecake and hot fudge once, doubled, on the
+    // earliest date, whenever more than one dinner uses them.
+    batch: Object.keys(state.menu.components).filter((n) => state.menu.components[n].batch_steps),
+  });
+
+  // ---- Rendering --------------------------------------------------------------
+  const courseValue = (s, c) => {
+    const v = s[c.field];
+    if (v == null) return '<span class="missing">Not picked yet</span>';
+    if (v === 'none') return `<span>${esc(c.none)}</span>`;
+    const ch = choiceOf(c.field, v);
+    return ch ? esc(c.field === 'meal' ? `#${ch.key} ${ch.title}` : ch.title) : `<span class="missing">Unknown choice "${esc(v)}"</span>`;
+  };
+  const lateNotes = (s) => {
+    const late = COURSES.map((c) => {
+      const ch = choiceOf(c.field, s[c.field]);
+      const lead = ch ? leadOf(ch.comps) : null;
+      return lead && lead.days > daysUntil(s.date) ? `${ch.short} (${shortDay(addDaysKey(s.date, -lead.days))})` : null;
+    }).filter(Boolean);
+    return late.length
+      ? `<p class="late-note">Prep should already have started for ${esc(late.join(', '))}. Those tasks go to the top of today's sheet.</p>`
+      : '';
+  };
+
+  const ticket = (s, isPast) => {
+    const guests = `${s.guests} guest${s.guests === 1 ? '' : 's'}`;
+    let actions;
+    if (state.confirmRemove === s.id) {
+      actions = `<div class="confirm"><p>Remove ${esc(s.host)}, ${esc(shortDay(s.date))}?</p>
+        <button type="button" class="btn quiet" data-action="keep" data-id="${s.id}" data-key="keep-${s.id}">Keep</button>
+        <button type="button" class="btn danger" data-action="remove" data-id="${s.id}" data-key="remove-${s.id}">Remove</button></div>`;
+    } else {
+      const include = isPast ? '' : `<label class="include"><input type="checkbox" data-action="include" data-id="${s.id}" data-key="inc-${s.id}" ${state.excluded.has(s.id) ? '' : 'checked'}> In prep list</label>`;
+      const edit = state.readOnly ? '' : `
+        ${isPast ? '' : `<button type="button" class="btn quiet" data-action="edit" data-id="${s.id}" data-key="edit-${s.id}">Edit details</button>
+        <button type="button" class="btn" data-action="menu" data-id="${s.id}" data-key="menu-${s.id}">${isComplete(s) ? 'Change menu' : 'Pick menu'}</button>`}
+        <button type="button" class="btn quiet" data-action="ask-remove" data-id="${s.id}" data-key="ask-${s.id}">Remove</button>`;
+      actions = `${include}<span class="spacer"></span>${edit}`;
+    }
+    return `<li class="ticket${state.menuFor === s.id ? ' open' : ''}" id="t-${s.id}">
+      <div class="ticket-band"><strong>${esc(longDay(s.date))}</strong><span>${esc(guests)}</span></div>
+      <div class="ticket-body">
+        <p class="ticket-host">${esc(s.host)}</p>
+        <dl class="courses">${COURSES.map((c) => `<dt>${c.label}</dt><dd>${courseValue(s, c)}</dd>`).join('')}</dl>
+        ${isPast ? '' : lateNotes(s)}
+        <div class="ticket-actions">${actions}</div>
+      </div>
+    </li>`;
+  };
+
+  const renderList = () => {
+    const el = $('#serviceList');
+    if (state.mode === 'loading') {
+      el.innerHTML = `<div class="empty"><strong>Loading saved dinners</strong><span>Your booked dinner services will show here.</span></div>`;
+      return;
+    }
+    const up = upcoming(), old = past();
+    const list = up.length
+      ? `<ul class="tickets">${up.map((s) => ticket(s, false)).join('')}</ul>`
+      : `<div class="empty"><strong>No upcoming dinners yet</strong><span>Press Add Guest/Date to enter the host, the dinner date and the guest count. Then pick the salad or soup, main course and dessert.</span></div>`;
+    const oldList = old.length
+      ? `<details class="past"><summary>Past dinners (${old.length})</summary><ul class="tickets">${old.map((s) => ticket(s, true)).join('')}</ul></details>`
+      : '';
+    el.innerHTML = list + oldList;
+  };
+
+  const renderMenuPanel = () => {
+    const el = $('#menuPanel');
+    const s = state.items.find((i) => i.id === state.menuFor);
+    if (!s || !state.menu) { el.innerHTML = ''; return; }
+    const times = state.menu.service_times;
+    const group = (c) => {
+      const cards = choicesFor(c.field).map((ch) => {
+        const lead = leadLine(leadOf(ch.comps), s.date);
+        const on = String(s[c.field]) === String(ch.key);
+        return `<button type="button" class="choice" aria-pressed="${on}" data-action="pick" data-field="${c.field}" data-value="${esc(ch.key)}" data-key="pick-${c.field}-${esc(ch.key)}">
+          <span class="num" aria-hidden="true">${ch.num != null ? esc(ch.num) : ''}</span>
+          <span class="name">${esc(ch.title)}</span>
+          ${ch.sub ? `<span class="sub">${esc(ch.sub)}</span>` : ''}
+          <span class="lead${lead.late ? ' late' : ''}">${esc(lead.text)}</span>
+        </button>`;
+      }).join('');
+      const none = c.none ? `<button type="button" class="choice none" aria-pressed="${s[c.field] === 'none'}" data-action="pick" data-field="${c.field}" data-value="none" data-key="pick-${c.field}-none"><span class="num" aria-hidden="true"></span><span class="name">${esc(c.none)}</span></button>` : '';
+      return `<div class="course" role="group" aria-labelledby="h-${c.field}">
+        <div class="course-head"><h4 id="h-${c.field}">${c.label}</h4><span>served ${clock(times[c.time])}</span></div>
+        <div class="choices">${cards}${none}</div>
+      </div>`;
+    };
+    const missing = COURSES.filter((c) => s[c.field] == null).map((c) => c.label);
+    el.innerHTML = `<section class="panel" aria-labelledby="menuTitle">
+      <div class="panel-head">
+        <h3 id="menuTitle">Menu for ${esc(s.host)}</h3>
+        <p>${esc(longDay(s.date))} &middot; ${esc(s.guests)} guests</p>
+      </div>
+      ${COURSES.map(group).join('')}
+      <div class="actions">
+        ${missing.length ? `<span class="hint">Still to pick: ${esc(missing.join(', '))}</span>` : ''}
+        <button type="button" class="btn primary" data-action="menu-done" data-key="menu-done">Done</button>
+      </div>
+    </section>`;
+  };
+
+  const DENSITY = { normal: '10 pt', compact: '9 pt', tight: '8 pt' };
+  const renderBuild = () => {
+    const el = $('#buildPanel');
+    if (!state.menu) { el.innerHTML = '<p>Loading the menu.</p>'; return; }
+    const list = included();
+    const unfinished = list.filter((s) => !isComplete(s));
+    let summary;
+    if (!list.length) summary = upcoming().length ? 'Tick at least one dinner to build its prep list.' : 'Add a dinner service to build its prep list.';
+    else summary = `Builds ${list.length} dinner${list.length === 1 ? '' : 's'}, ${shortDay(list[0].date)}${list.length > 1 ? ` to ${shortDay(list[list.length - 1].date)}` : ''}. One sheet per prep day; dinners that share a prep day share its sheet.`;
+    const hint = unfinished.length
+      ? `<p class="hint">Finish the menu for ${unfinished.map((s) => `${esc(s.host)} (${esc(shortDay(s.date))})`).join(', ')}, or untick ${unfinished.length === 1 ? 'it' : 'them'}.</p>`
+      : '';
+    const noLib = !window.docx ? '<p class="hint">The document library did not load. Check the connection and reload the page.</p>' : '';
+    const canBuild = list.length && !unfinished.length && window.docx && !state.building;
+    el.innerHTML = `<div class="build-row">
+        <p>${esc(summary)}</p>
+        <button type="button" class="btn primary" data-action="build" data-key="build" ${canBuild ? '' : 'disabled'}>${state.building ? 'Building\u2026' : 'Build Prep List'}</button>
+      </div>${hint}${noLib}${renderResult()}`;
+  };
+
+  const renderResult = () => {
+    const r = state.result;
+    if (!r) return '';
+    const stale = JSON.stringify(requestFor(included())) !== r.signature;
+    const notes = [];
+    if (r.pastDue) notes.push(`<li class="alert"><b>${r.pastDue} task${r.pastDue === 1 ? ' is' : 's are'} past due.</b> ${r.pastDue === 1 ? 'It is' : 'They are'} at the top of today's sheet under Past Due: Do First. Check whether the menu still works.</li>`);
+    for (const w of r.warnings) notes.push(`<li class="alert"><b>Batch warning.</b> ${esc(w)}</li>`);
+    for (const d of r.spill) notes.push(`<li class="alert"><b>${esc(d)}</b> may run onto a second page, even at 8 pt.</li>`);
+    for (const b of r.batches) notes.push(`<li>${esc(b)}</li>`);
+    for (const f of r.frozen) notes.push(`<li>${esc(f)}</li>`);
+    const rows = r.sheets.map((s) => `<tr>
+      <td>${esc(s.day)}</td><td class="tonight">${esc(s.tonight)}</td>
+      <td class="num">${s.pastDue || ''}</td><td class="num">${s.advance}</td><td class="num">${s.timed}</td><td>${s.size}</td></tr>`).join('');
+    return `<div class="result" aria-live="polite">
+      <p class="result-head"><strong>${r.sheets.length} prep sheet${r.sheets.length === 1 ? '' : 's'}</strong> &middot; ${r.boxes} check boxes &middot; ${esc(r.span)}</p>
+      ${stale ? '<p class="stale">The dinners changed since this build. Build again for an up-to-date prep list.</p>' : ''}
+      ${notes.length ? `<ul class="notes">${notes.join('')}</ul>` : ''}
+      <div class="table-scroll"><table class="sheets">
+        <thead><tr><th>Prep day</th><th>Dinner that night</th><th class="num">Past due</th><th class="num">Advance</th><th class="num">Timeline</th><th>Text</th></tr></thead>
+        <tbody>${rows}</tbody></table></div>
+      <div class="save-row">
+        <button type="button" class="btn primary" data-action="save" data-key="save" ${downloads ? '' : 'disabled'}>Save Prep List (.docx)</button>
+        <span class="save-status">${esc(downloads ? state.saveStatus || r.filename : 'Saving files works when this page is open in Claude.')}</span>
+      </div>
+    </div>`;
+  };
+
+  const renderStatus = () => {
+    const msg = {
+      loading: 'Connecting to saved dinners\u2026',
+      shared: 'Dinners save as you go. Everyone you share this page with sees the same list.',
+      local: "This view can't save. Dinners added here last until the page closes.",
+      error: "Saved dinners couldn't load. Reload the page to try again.",
+    }[state.mode];
+    $('#status').textContent = state.notice || msg;
+  };
+
+  const render = () => {
+    const key = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.key : null;
+    renderMenuPanel();
+    renderList();
+    renderBuild();
+    renderStatus();
+    $('#addBtn').disabled = state.readOnly || state.mode === 'loading' || !state.menu;
+    if (key) { const again = document.querySelector(`[data-key="${CSS.escape(key)}"]`); if (again) again.focus(); }
+  };
+
+  // ---- Guest form -------------------------------------------------------------
+  const form = $('#guestForm');
+  const fieldErr = (name, msg) => {
+    const input = $(`#${name}Input`), err = $(`#${name}Error`);
+    input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    err.textContent = msg || '';
+    err.hidden = !msg;
+  };
+  const openForm = (id) => {
+    state.formFor = id;
+    state.menuFor = null;
+    const s = id === 'new' ? null : state.items.find((i) => i.id === id);
+    $('#formTitle').textContent = s ? `Edit ${s.host}, ${shortDay(s.date)}` : 'New dinner service';
+    $('#submitBtn').textContent = s ? 'Save and Pick Menu' : 'Add Dinner Service';
+    $('#hostInput').value = s ? s.host : '';
+    $('#dateInput').value = s ? s.date : '';
+    $('#guestsInput').value = s ? s.guests : '';
+    $('#dateInput').min = todayKey;
+    ['host', 'date', 'guests'].forEach((n) => fieldErr(n, ''));
+    form.hidden = false;
+    render();
+    $('#hostInput').focus();
+    form.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  };
+  const closeForm = () => { state.formFor = null; form.hidden = true; };
+
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const host = $('#hostInput').value.trim();
+    const date = $('#dateInput').value;
+    const guestsRaw = $('#guestsInput').value.trim();
+    const guests = Number(guestsRaw);
+    const errs = {
+      host: host ? '' : "Enter the host's name.",
+      date: !date ? 'Pick the dinner date.' : (date < todayKey ? 'That date has passed. Pick today or a later date.' : ''),
+      guests: guestsRaw && Number.isInteger(guests) && guests > 0 ? '' : 'Enter the number of guests, 1 or more.',
+    };
+    Object.entries(errs).forEach(([n, m]) => fieldErr(n, m));
+    const firstBad = Object.keys(errs).find((n) => errs[n]);
+    if (firstBad) { $(`#${firstBad}Input`).focus(); return; }
+    const id = state.formFor;
+    try {
+      let target = id;
+      if (id === 'new') target = await store.add({ host, date, guests, salad: null, meal: null, dessert: null, created: new Date().toISOString() });
+      else await store.update(id, { host, date, guests });
+      state.excluded.delete(target);
+      closeForm();
+      state.menuFor = target;
+      state.notice = '';
+      render();
+      const panel = $('#menuPanel .panel');
+      if (panel) { panel.scrollIntoView({ block: 'start', behavior: 'smooth' }); const first = panel.querySelector('.choice'); if (first) first.focus({ preventScroll: true }); }
+    } catch (e) { writeError(e); }
+  });
+
+  // ---- Build and save ---------------------------------------------------------
+  const multWord = (n) => (n === 2 ? 'Double' : n === 3 ? 'Triple' : `${n}x`);
+  const svcShort = (s) => `${s.host ? s.host + ' ' : ''}${s.date.getMonth() + 1}/${s.date.getDate()}`;
+  const build = async () => {
+    const list = included();
+    const request = requestFor(list);
+    state.building = true; state.saveStatus = ''; render();
+    try {
+      if (!logoBytes) logoBytes = new Uint8Array(await (await fetch('FiveOaksLogo.png')).arrayBuffer());
+      const r = P.build({ menu: state.menu, request, docx: window.docx, logo: logoBytes });
+      const blob = await window.docx.Packer.toBlob(r.doc);
+      const first = list[0].date, last = list[list.length - 1].date;
+      state.result = {
+        signature: JSON.stringify(request),
+        blob, filename: `${r.stem}.docx`, boxes: r.boxes,
+        span: first === last ? shortDay(first) : `${shortDay(first)} to ${shortDay(last)}`,
+        pastDue: r.sheets.reduce((n, s) => n + s.counts.pastDue, 0),
+        warnings: r.warnings,
+        spill: r.sheets.filter((s) => s.maySpill).map((s) => P.shortDate(s.date)),
+        batches: Object.entries(r.batchUsers).map(([name, users]) => `${name}: ${multWord(users.length).toLowerCase()} batch, made once for ${users.map(svcShort).join(' + ')}.`),
+        frozen: r.frozenShares.map((f) => `${f.name}: the ${svcShort(f.svc)} share is frozen the day the batch is made (${P.shortDate(f.made)}) and thawed the day before that dinner.`),
+        sheets: r.sheets.map((s) => ({
+          day: P.shortDate(s.date),
+          tonight: s.tonight.length ? s.tonight.map((t) => `${t.host || 'Dinner'}: ${t.menuLabel}`).join('; ') : 'Advance prep only',
+          pastDue: s.counts.pastDue, advance: s.counts.advance, timed: s.counts.timed,
+          size: DENSITY[s.density.name] || s.density.name,
+        })),
+      };
+      state.building = false;
+      render();
+      await save();
+    } catch (e) {
+      state.building = false;
+      state.result = null;
+      state.notice = e instanceof P.PrepError ? `The prep list couldn't be built: ${e.message}` : `The prep list couldn't be built. ${e && e.message ? e.message : ''}`;
+      render();
+    }
+  };
+  const save = async () => {
+    const r = state.result;
+    if (!r || !downloads) return;
+    try {
+      const res = await downloads.save({ filename: r.filename, data: r.blob });
+      state.saveStatus = res && res.status === 'delivered' ? `Sent ${r.filename}.` : `Saved ${r.filename}.`;
+    } catch (e) {
+      const code = e && e.code;
+      state.saveStatus = code === 'declined' ? 'Not saved. Press Save Prep List to try again.'
+        : code === 'rate_limited' ? 'A save is already waiting for your answer.'
+        : "Saving files isn't available in this view.";
+    }
+    render();
+  };
+
+  // ---- Events -----------------------------------------------------------------
+  document.addEventListener('click', async (ev) => {
+    const el = ev.target.closest('[data-action]');
+    if (!el || el.tagName === 'INPUT') return;
+    const id = el.dataset.id;
+    switch (el.dataset.action) {
+      case 'new': openForm('new'); break;
+      case 'edit': openForm(id); break;
+      case 'cancel-form': closeForm(); render(); $('#addBtn').focus(); break;
+      case 'menu': closeForm(); state.menuFor = id; render(); { const p = $('#menuPanel .panel'); if (p) p.scrollIntoView({ block: 'start', behavior: 'smooth' }); } break;
+      case 'menu-done': {
+        const done = state.menuFor; state.menuFor = null; render();
+        const t = document.getElementById(`t-${done}`);
+        if (t) { t.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); const b = t.querySelector('[data-action="menu"]'); if (b) b.focus({ preventScroll: true }); }
+        break;
+      }
+      case 'pick': {
+        const s = state.items.find((i) => i.id === state.menuFor);
+        if (!s || state.readOnly) break;
+        const patch = { [el.dataset.field]: el.dataset.value };
+        if (col) Object.assign(s, patch);   // show the pick now; the store confirms it
+        store.update(s.id, patch).catch(writeError);
+        render();
+        break;
+      }
+      case 'ask-remove': state.confirmRemove = id; render(); break;
+      case 'keep': state.confirmRemove = null; render(); break;
+      case 'remove':
+        state.confirmRemove = null;
+        if (state.menuFor === id) state.menuFor = null;
+        try { await store.remove(id); } catch (e) { writeError(e); }
+        render();
+        $('#addBtn').focus();
+        break;
+      case 'build': build(); break;
+      case 'save': save(); break;
+    }
+  });
+  document.addEventListener('change', (ev) => {
+    const el = ev.target;
+    if (el.dataset && el.dataset.action === 'include') {
+      if (el.checked) state.excluded.delete(el.dataset.id); else state.excluded.add(el.dataset.id);
+      render();
+    }
+  });
+
+  // ---- Start ------------------------------------------------------------------
+  $('#todayLine').textContent = P.longDate(dateOf(todayKey));
+  render();
+  fetch('menu.json').then((r) => r.json()).then((m) => { state.menu = m; render(); })
+    .catch(() => { state.notice = "The menu couldn't load. Reload the page to try again."; render(); });
+  use('downloads').then((d) => { downloads = d; render(); });
+  use('db').then((db) => {
+    if (!db) { state.mode = 'local'; render(); return; }
+    col = db.collection('services');
+    col.onSnapshot((snap) => {
+      state.items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      state.mode = 'shared';
+      render();
+    }, () => { state.mode = 'error'; render(); });
+  });
+})();
+</script>

@@ -39,6 +39,8 @@ say "per SOP"; those SOPs live in `/Users/cheflance/Five_Oaks/SOP/`.
 | `scripts/build_prep_list.js` | Command line generator: reads the request, writes the .docx, prints the full schedule as text |
 | `scripts/prep_core.js` | The scheduling and document code itself, shared by the generator and the web app |
 | `scripts/render_docx.sh` | Renders a .docx through Microsoft Word to PDF and page PNGs |
+| `scripts/stage_webapp.sh` | Gathers the web app and the files it loads into one folder for publishing |
+| `webapp/index.html` | The Prep Planner web app (see "Web app" below) |
 | `references/selection_menu.md` | The salad or soup, dinner, and dessert selection menu shown when Chef gives a host and date |
 | `assets/FiveOaksLogo.png` | Green FIVE OAKS mallard wordmark, 700 x 204 |
 
@@ -127,10 +129,11 @@ Optional fields:
 
 ## Step 3: Run the generator
 
-`docx` is not installed globally. Install it into a scratch dir once per session:
+`docx` is not installed globally. Install it into a scratch dir once per session. Keep
+the version pinned at 9.8.1, the same one the web app loads, so both build the same file:
 
 ```bash
-cd <scratchpad>/node && npm init -y && npm install docx --no-audit --no-fund
+cd <scratchpad>/node && npm init -y && npm install docx@9.8.1 --no-audit --no-fund
 ```
 
 `require('docx')` resolves from the script's own folder, not your cwd, so pass `NODE_PATH`:
@@ -273,6 +276,44 @@ Things not to undo, each one bought back page space:
    - Anything on the sheets that looks off to you, such as two tasks that clash at the
      same time. Ask Chef about it rather than editing the menu yourself.
 
+## Web app
+
+Chef asked for this on 2026-10-23: a page he can open from any device to enter bookings
+and build the prep list himself. It's a private claude.ai artifact, the **Five Oaks Prep
+Planner**: https://claude.ai/artifact/VjxfPZT27CMgeCd3JU81ez
+
+- **Flow:** the Five Oaks logo at the top, then an **Add Guest/Date** button. It opens a
+  form for Host (the host sponsor), Dinner Date, and Number of Guests, with an **Add Dinner
+  Service** button. That button saves the dinner and shows the menu selection: Salad or
+  Soup, Main Course (the entree), and Dessert. Each choice card shows how far ahead its
+  prep starts and flags it when the dinner is too close. **Build Prep List** runs
+  `prep_core.js` in the browser on every ticked upcoming dinner, shows the sheets with
+  their task counts, past-due and batch notes, and offers the .docx to save.
+- **Same output as the generator.** The page runs the same `prep_core.js` and
+  `menu.json`, with the same `batch` default (cheesecake and hot fudge), and loads docx
+  9.8.1 from jsDelivr. On 2026-10-23 a three-dinner run gave the same schedule text and
+  the same 33,857-byte .docx in the browser and from `build_prep_list.js`. The page
+  always uses the brand fonts, and it can't make the PDF, since that needs Word on
+  Chef's Mac.
+- **Bookings live in the artifact's database**, collection `services`, one document per
+  dinner: `host`, `date` (YYYY-MM-DD), `guests`, `salad` (key or `none`), `meal` (`"1"`
+  to `"5"`), `dessert` (key or `none`), `created`. A course still `null` hasn't been
+  picked. When Chef asks for the PDF of what he entered, read them with ArtifactData
+  `list` on that URL and run them through Steps 2 to 5.
+- **Republish after any change** to `menu.json`, `prep_core.js`, or `webapp/index.html`,
+  or the page keeps the old menu. Stage the files into the scratchpad, then publish the
+  staged `index.html` with the other three as `files`. Pass the URL above as `url` (read
+  the artifact first if this conversation hasn't), and leave `capabilities` out so the
+  stored `db` and `downloads` carry over:
+
+  ```bash
+  ~/.claude/skills/fiveoaks-prep-list/scripts/stage_webapp.sh <scratchpad>/prep-app
+  ```
+
+- **Keep `prep_core.js` ASCII outside comments.** Write `½` as `\u00BD` in code. A
+  server that doesn't declare UTF-8 makes the browser misread it, and every "-3 ½
+  hours" task then fails to parse.
+
 ## Changing the menu
 
 All menu edits go in `data/menu.json`. The script needs no changes.
@@ -300,6 +341,7 @@ All menu edits go in `data/menu.json`. The script needs no changes.
   desserts. Edit the one component entry and every meal using it picks up the change.
 
 After any edit, run the generator once on a sample booking to confirm it still parses.
+Then republish the web app (see "Web app") so its menus match.
 
 ## Chef's corrections to the original list
 

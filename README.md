@@ -14,6 +14,8 @@ offsets.
 | `scripts/build_prep_list.js` | Command line generator: writes the Word file and prints the schedule |
 | `scripts/prep_core.js` | The scheduling and Word file code, shared by the generator and the web app |
 | `scripts/render_docx.sh` | Renders the Word file to PDF through Microsoft Word, for checking |
+| `scripts/stage_webapp.sh` | Gathers the web app's files into one folder for publishing |
+| `webapp/index.html` | The Prep Planner web app: enter dinners, pick menus, build the prep list |
 | `references/selection_menu.md` | The salad or soup, dinner, and dessert pick list |
 | `assets/FiveOaksLogo.png` | The Five Oaks logo printed on each sheet |
 
