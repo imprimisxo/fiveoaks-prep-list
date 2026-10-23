@@ -1,0 +1,377 @@
+{
+  "_about": "Five Oaks Duck Lodge menu and prep timing. Source: /Users/cheflance/Five_Oaks/Prep List.docx (Chef Lance, 2026-10-20), with Chef's corrections of 2026-10-22 (see SKILL.md). This file, not the .docx, is now the source of truth. Each task reads '<offset>, <task>' in Chef's wording. Day offsets put the task on a dated sheet as advance prep; hour and minute offsets put it on the service-day timeline, counted back from that component's course time.",
+
+  "service_times": {
+    "appetizers": "18:00",
+    "salad": "19:00",
+    "dinner": "19:30",
+    "dessert": "20:00"
+  },
+  "_service_times_note": "Chef's times (2026-10-22): appetizers 6 PM, salad or soup 7 PM, entrees 7:30 PM, dessert 8 PM. Entrees were 7 PM and dessert 7:30 PM until the Salad or Soup course was added.",
+
+  "_salads_soups_note": "Salads & Soups is part of the dinner, one choice per night, served at 7 PM (course 'salad'). Appetizers are separate. Chef's list of 2026-10-23, numbered as he numbered it. That list replaced the SOP-derived gumbo tasks of 2026-10-22.",
+  "salads_soups": {
+    "ranch-salad": {
+      "number": 1,
+      "name": "Five Oaks Ranch Salad",
+      "short": "Ranch Salad",
+      "components": ["Five Oaks Ranch Salad"]
+    },
+    "bacon-salad": {
+      "number": 2,
+      "name": "House Bacon Salad",
+      "short": "Bacon Salad",
+      "components": ["House Bacon Salad"]
+    },
+    "caesar-salad": {
+      "number": 3,
+      "name": "Caesar Salad",
+      "short": "Caesar Salad",
+      "components": ["Caesar Salad"]
+    },
+    "duck-gumbo": {
+      "number": 4,
+      "name": "Duck Gumbo",
+      "short": "Duck Gumbo",
+      "components": ["Duck Gumbo"]
+    }
+  },
+
+  "meals": {
+    "1": {
+      "name": "Bone-in Cowboy Ribeye, Sauteed Wild Mushrooms, Cajun Rice, and Sauteed Green Beans",
+      "short": "Cowboy Ribeye",
+      "components": ["Bone-in Cowboy Ribeye", "Sauteed Wild Mushrooms", "Cajun Rice", "Sauteed Green Beans"]
+    },
+    "2": {
+      "name": "Bone-in Filet with Demi-glace, Au Gratin Rice, and Grilled Broccolini",
+      "short": "Bone-in Filet",
+      "components": ["Bone-in Filet with Demi-glace", "Au Gratin Rice", "Grilled Broccolini"]
+    },
+    "3": {
+      "name": "Prime Rib with Au Jus, Mashed Potatoes, and Sauteed Green Beans",
+      "short": "Prime Rib",
+      "components": ["Prime Rib with Au Jus", "Mashed Potatoes", "Sauteed Green Beans"]
+    },
+    "4": {
+      "name": "Dry Aged Duroc Pork Ribeye with Money Sauce, Au Gratin Rice, and Lemon Grilled Asparagus",
+      "short": "Duroc Pork Ribeye",
+      "components": ["Dry Aged Duroc Pork Ribeye", "Money Sauce", "Au Gratin Rice", "Lemon Grilled Asparagus"]
+    },
+    "5": {
+      "name": "Salmon with Creamy Dill Sauce, Au Gratin Rice, and Lemon Grilled Asparagus",
+      "short": "Salmon",
+      "components": ["Salmon", "Creamy Dill Sauce", "Au Gratin Rice", "Lemon Grilled Asparagus"]
+    }
+  },
+
+  "desserts": {
+    "skillet-cookie": {
+      "name": "Warm Individual Chocolate Chip Skillet Cookie with Blue Bell Ice Cream and Homemade Hot Fudge",
+      "short": "Skillet Cookie",
+      "components": ["Chocolate Chip Skillet Cookie", "Homemade Hot Fudge", "Blue Bell Ice Cream"]
+    },
+    "cheesecake": {
+      "name": "Classic Cheesecake with Strawberries and Homemade Sweetened Whipped Cream",
+      "short": "Cheesecake",
+      "components": ["Classic Cheesecake", "Macerated Strawberry Sauce", "Homemade Sweetened Whipped Cream"]
+    },
+    "bread-pudding": {
+      "name": "Bread Pudding with Bourbon Caramel Sauce and Homemade Sweetened Whipped Cream",
+      "short": "Bread Pudding",
+      "components": ["Bread Pudding", "Homemade Sweetened Whipped Cream"]
+    },
+    "brownie": {
+      "name": "Warm Chocolate Brownie with Blue Bell Ice Cream and Homemade Hot Fudge",
+      "short": "Brownie",
+      "components": ["Warm Chocolate Brownie", "Blue Bell Ice Cream", "Homemade Hot Fudge"]
+    }
+  },
+
+  "components": {
+    "Five Oaks Ranch Salad": {
+      "course": "salad",
+      "tasks": [
+        "-2 days, make, and store, ranch dressing",
+        "-4 hours, cut and wash lettuce",
+        "-3 ½ hours, place cut lettuce in a paper towel lined bowl then reefer",
+        "-30 minutes, mise croutons",
+        "-15 minutes, toss lettuce with dressing, add croutons",
+        "0 hours, plate and serve"
+      ]
+    },
+    "House Bacon Salad": {
+      "course": "salad",
+      "_note": "Matches FiveOaks_SOP_Wilted_Spinach_Salad_with_Hot_Bacon_Dressing.",
+      "tasks": [
+        "-6 hours, cook bacon, reserve fat",
+        "-6 hours, boil eggs 10 minutes, ice bath",
+        "-5 hours, stem spinach, hold in reefer",
+        "-2 hours, slice red onion, hold in reefer",
+        "-2 hours, dice chives, hold in reefer",
+        "-1 hours, temper spinach",
+        "-1 hours, trim and slice mushrooms",
+        "-30 minutes, warm bacon grease",
+        "0 hour, toss salad, plate and serve"
+      ]
+    },
+    "Caesar Salad": {
+      "course": "salad",
+      "tasks": [
+        "-4 hours, cut and wash romaine",
+        "-3 hours, hold romaine in reefer",
+        "-5 minutes, toss with dressing",
+        "0 hour, add croutons and parm, plate and serve"
+      ]
+    },
+    "Duck Gumbo": {
+      "course": "salad",
+      "_note": "Chef's list of 2026-10-23. FiveOaks_SOP_Duck_Confit_Gumbo allows 3-4 days refrigerated or frozen up to 2 months with a 24-48 hour thaw, so Chef added the freeze (-7 days) and thaw (-2 days) steps the same day.",
+      "tasks": [
+        "-7 days, make the gumbo, keep duck separate",
+        "-7 days, freeze the gumbo and the duck separately per SOP: labeled airtight containers, 1 in headspace",
+        "-2 days, pull the gumbo and the duck from freezer to reefer to thaw",
+        "-4 hours, wash and cook rice",
+        "-3 hours, hold the rice in warm oven; slice scallions and chop parsley",
+        "-2 hours, fold in the duck and simmer to 165°F",
+        "-30 minutes, finish and season the gumbo; warm the bowls",
+        "0 hour, plate and serve"
+      ]
+    },
+    "Bone-in Cowboy Ribeye": {
+      "course": "dinner",
+      "tasks": [
+        "-8 days, put ribeye roast in reefer to thaw",
+        "-4 days, cut steaks from ribeye roast",
+        "-4 days, dry brine bone-in ribeye steaks",
+        "-1 days, vacuum seal and sous vide bone-in ribeye steaks",
+        "-1 days, remove bone-in ribeye steaks from plastic, reserving juices",
+        "-1 days, place bone-in ribeye steaks on sheet pan with rack in reefer to dry",
+        "-3 hours, grill mark bone-in ribeye steaks and rest in reefer",
+        "-1 hours, warm bone-in ribeye steaks in low oven to temp",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Sauteed Wild Mushrooms": {
+      "course": "dinner",
+      "tasks": [
+        "-3 days, clean and trim wild mushrooms",
+        "-2 days, make the wild mushrooms sauce",
+        "-2 days, package in quart containers and freeze",
+        "-1 days, place in reefer to thaw",
+        "-1 1/2 hours, gently warm on stove"
+      ]
+    },
+    "Cajun Rice": {
+      "course": "dinner",
+      "tasks": [
+        "-4 hours, cook the rice",
+        "-3 hours, hold in a warm oven",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Sauteed Green Beans": {
+      "course": "dinner",
+      "tasks": [
+        "-1 hours, sauté the green beans",
+        "-1 hours, hold in a warm oven",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Bone-in Filet with Demi-glace": {
+      "course": "dinner",
+      "tasks": [
+        "-8 days, put filets in reefer to thaw",
+        "-4 days, put demi in reefer to thaw",
+        "-4 days, dry brine bone-in filets",
+        "-1 days, vacuum seal and sous vide bone-in filet steaks",
+        "-1 days, remove bone-in filet steaks from plastic, reserving juices",
+        "-1 days, place bone-in filet steaks on sheet pan with rack in reefer to dry",
+        "-3 hours, grill mark bone-in filet steaks and rest in reefer",
+        "-2 hours, warm demi on stove, store in thermos",
+        "-1 hours, warm bone-in filet steaks in low oven to temp",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Au Gratin Rice": {
+      "course": "dinner",
+      "tasks": [
+        "-1 days, cook rice, cool and store in reefer",
+        "-3 hours, sauté veggies",
+        "-2 hours, mix rice and put in oven",
+        "-1 hours, hold in warm oven",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Grilled Broccolini": {
+      "course": "dinner",
+      "tasks": [
+        "-1 days, blanch broccolini",
+        "-3 hours, grill mark broccolini",
+        "-2 hours, hold in a warm oven",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Prime Rib with Au Jus": {
+      "course": "dinner",
+      "tasks": [
+        "-8 days, put rib roast in reefer to thaw",
+        "-4 days, dry brine bone-in rib roast",
+        "-1 days, vacuum seal and sous vide bone-in rib roast",
+        "-1 days, remove bone-in rib roast from plastic, reserving juices for jus",
+        "-1 days, place bone-in rib roast on sheet pan with rack in reefer to dry",
+        "-3 hours, grill mark bone-in rib roast and rest in reefer",
+        "-1 hours, cut steaks from rib roast",
+        "-1 hours, warm bone-in rib roast in low oven to temp",
+        "-15 minutes, slice prime rib steaks",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Mashed Potatoes": {
+      "course": "dinner",
+      "tasks": [
+        "-6 hours, Bake gold potatoes",
+        "-5 hours, Press cooked potatoes through drum sieve",
+        "-4 ½ hours, Weigh potatoes and add 1% salt by weight",
+        "-4 hours, Add butter and mix thoroughly",
+        "-4 hours, Add heavy cream, adjust seasoning",
+        "-3 hours, hold in warm oven",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Dry Aged Duroc Pork Ribeye": {
+      "course": "dinner",
+      "tasks": [
+        "-8 days, put pork ribeye in reefer to thaw",
+        "-4 days, dry brine bone-in pork ribeye",
+        "-1 days, vacuum seal and sous vide bone-in pork ribeye steaks",
+        "-1 days, remove bone-in pork ribeye steaks from plastic, reserving juices",
+        "-1 days, place bone-in pork ribeye steaks on sheet pan with rack in reefer to dry",
+        "-3 hours, grill mark bone-in pork ribeye steaks and rest in reefer",
+        "-2 hours, warm money sauce on stove, store in thermos",
+        "-1 hours, warm bone-in pork ribeye steaks in low oven to temp",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Money Sauce": {
+      "course": "dinner",
+      "tasks": [
+        "-2 days, make money sauce per SOP (no parsley), cool and store in reefer"
+      ]
+    },
+    "Lemon Grilled Asparagus": {
+      "course": "dinner",
+      "tasks": [
+        "-1 hours, grill the asparagus",
+        "-10 minutes, finish the asparagus with the lemon butter",
+        "-0 hours, plate and serve"
+      ]
+    },
+    "Salmon": {
+      "course": "dinner",
+      "tasks": [
+        "-4 days, thaw salmon in reefer",
+        "-2 hours, season salmon and rest in reefer",
+        "-30 minutes, cook salmon",
+        "-15 minutes, hold in warm oven",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Creamy Dill Sauce": {
+      "course": "dinner",
+      "tasks": [
+        "-1 hours, make creamy dill sauce",
+        "-30 minutes, store in charged thermos",
+        "0 hours, plate and serve"
+      ]
+    },
+
+    "Chocolate Chip Skillet Cookie": {
+      "course": "dessert",
+      "tasks": [
+        "-1 days, move cookie dough to reefer to thaw",
+        "-5 hours, press thawed cookie dough into cast iron skillets, rest in reefer",
+        "-1 hours, bake cookies in oven per directions",
+        "-15 minutes, hold in warm oven",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Macerated Strawberry Sauce": {
+      "course": "dessert",
+      "tasks": [
+        "-2 days, make the SOP",
+        "-2 days, store in an air-tight container",
+        "0 days, plate and serve"
+      ]
+    },
+    "Homemade Sweetened Whipped Cream": {
+      "course": "dessert",
+      "tasks": [
+        "-4 hours, place all equipment in freezer",
+        "-2 hours, whip the cream according to SOP",
+        "-1 ½ hours, load to a piping bag with a decorative tip",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Classic Cheesecake": {
+      "course": "dessert",
+      "batch_steps": 3,
+      "batch_max_days": 30,
+      "_batch_note": "First 3 tasks (make, cool, wrap and freeze) can be one bake for several dinners. Frozen up to 30 days per FiveOaks_SOP_Chef_Jamies_Cheesecake.",
+      "tasks": [
+        "-7 days, make the cheesecake per SOP",
+        "-7 days, cool overnight in reefer",
+        "-6 days, double cater wrap and freeze",
+        "-1 days, pull from freezer to reefer to thaw",
+        "-4 hours, slice evenly to number of servings",
+        "-1/2 hours, plate",
+        "0 hours, pipe cream and garnish with strawberries, serve"
+      ]
+    },
+    "Bread Pudding": {
+      "course": "dessert",
+      "tasks": [
+        "-10 days, collect bread scraps",
+        "-3 days, make the SOP, cool overnight in reefer",
+        "-2 days, make the bourbon caramel sauce",
+        "-3 hours, portion the bread pudding",
+        "-3 hours, hold bread pudding in a warm oven",
+        "-3 hours, warm sauce on stove, then hold in warm oven",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Warm Chocolate Brownie": {
+      "course": "dessert",
+      "tasks": [
+        "-3 days, place frozen brownies in reefer to thaw",
+        "-3 hours, hold in a warm oven",
+        "0 hours, plate and serve"
+      ]
+    },
+    "Blue Bell Ice Cream": {
+      "course": "dessert",
+      "tasks": [
+        "-6 hours, place a half sheet pan in freezer",
+        "-3 hours, remove sheet pan from freezer, line with parchment, and scoop ice cream onto sheet pan, return to freezer",
+        "0 hours, remove from freezer, plate and serve"
+      ]
+    },
+    "Homemade Hot Fudge": {
+      "course": "dessert",
+      "batch_steps": 2,
+      "batch_max_days": 6,
+      "batch_freeze": {
+        "freeze": "freeze the {share} share per SOP: airtight, 1/2 in headspace, label with days refrigerated",
+        "thaw": "pull the {share} share from freezer to reefer to thaw"
+      },
+      "_batch_note": "First 2 tasks (make, store) can be one batch for several dinners. Refrigerated up to 7 days counting the make day as day 1, so a dinner can be at most 6 days after the make day (FiveOaks_SOP_Homemade_Hot_Fudge). A later dinner past that limit gets its share frozen on the make day and thawed the day before its dinner (batch_freeze), per the SOP's freezing section. Chef approved this on 2026-10-22.",
+      "tasks": [
+        "-5 days, make the fudge",
+        "-5 days, store in reefer per SOP",
+        "-30 minutes, reheat fudge sauce per SOP",
+        "-15 minutes, hold in warm oven",
+        "0 hours, plate and serve"
+      ]
+    }
+  }
+}
