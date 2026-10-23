@@ -295,9 +295,16 @@ was slow. The artifact still works.
   form for Host (the host sponsor), Dinner Date, and Number of Guests, with an **Add Dinner
   Service** button. That button saves the dinner and shows the menu selection: Salad or
   Soup, Main Course (the entree), and Dessert. Each choice card shows how far ahead its
-  prep starts and flags it when the dinner is too close. **Build Prep List** runs
-  `prep_core.js` in the browser on every ticked upcoming dinner, shows the sheets with
-  their task counts, past-due and batch notes, and offers the .docx to save.
+  prep starts and flags it when the dinner is too close.
+- **Prep List** (Chef's change, 2026-10-23): a calendar field picks the prep day
+  (today by default, no past days) and chips list every day that has prep. Pressing
+  **Prep List** shows that day's task counts and two buttons. **View Prep List** shows
+  the day's sheet on screen, laid out like the printed one. **Download Prep List** saves
+  the .docx for that one day, `FiveOaks_Prep_List_<date>.docx`. Nothing downloads on
+  its own. The schedule always covers every ticked upcoming dinner, so a day's sheet
+  carries advance prep for later nights too. `build()` takes `only: "<date>"` for the
+  one-day document, and without `docx` it returns the schedule alone (`doc` is null),
+  which is what the on-screen sheet uses.
 - **Same output as the generator.** The page runs the same `prep_core.js` and
   `menu.json`, with the same `batch` default (cheesecake and hot fudge), and loads docx
   9.8.1 from jsDelivr. On 2026-10-23 a three-dinner run gave the same schedule text and

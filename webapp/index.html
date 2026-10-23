@@ -179,29 +179,50 @@ details.past { color: var(--muted); }
 details.past summary { cursor: pointer; padding: 6px 0; }
 details.past .tickets { margin-top: 10px; }
 
-/* ---- Build ---- */
-.build { display: grid; gap: 14px; }
-.build-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
-.build-row p { flex: 1 1 260px; min-width: 0; }
+/* ---- Prep list: pick a day, then view or download its sheet ---- */
+.prep-pick { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
+.prep-pick .field { flex: 0 1 220px; }
 .hint { color: var(--warn); }
-.result { display: grid; gap: 14px; border-top: 1px solid var(--line); padding-top: 16px; }
-.result-head { font-size: 17px; }
-.result-head strong { font-family: var(--font-display); font-weight: 500; color: var(--brand); font-size: 20px; }
-.stale { color: var(--warn); font-weight: 600; }
+.prep-days { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--muted); font-size: 14px; }
+.prep-days span { margin-right: 4px; }
+.chip {
+  min-height: 34px; padding: 4px 12px; font-size: 14px; font-variant-numeric: tabular-nums;
+  color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer;
+}
+.chip:hover { border-color: var(--brand); }
+.chip[aria-pressed="true"] { border-color: var(--brand); background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+.prep-result { display: grid; gap: 12px; border-top: 1px solid var(--line); padding-top: 16px; }
+.prep-head { font-size: 17px; }
+.prep-head strong { font-family: var(--font-display); font-weight: 500; color: var(--brand); font-size: 21px; }
 .notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.notes li { padding: 8px 12px; border-radius: 6px; background: var(--brand-soft); }
-.notes li.alert { background: var(--warn-soft); color: var(--ink); }
-.notes li.alert b { color: var(--warn); }
-.table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
-table.sheets { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 15px; }
-table.sheets th, table.sheets td { padding: 7px 12px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
-table.sheets th { font-family: var(--font-display); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; font-size: 13px; color: var(--on-brand); background: var(--brand); }
-table.sheets td.num, table.sheets th.num { text-align: right; }
-table.sheets tr:last-child td { border-bottom: 0; }
-table.sheets tr:nth-child(even) td { background: var(--brand-soft); }
-table.sheets td.tonight { white-space: normal; min-width: 160px; }
-.save-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.notes li { padding: 8px 12px; border-radius: 6px; background: var(--warn-soft); }
+.notes li b { color: var(--warn); }
+.save-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .save-status { color: var(--muted); }
+
+/* ---- On-screen prep sheet: the printed sheet's layout in the page's colors ---- */
+.sheet { border: 1px solid var(--line); border-radius: 10px; background: var(--surface); padding: 16px 18px 20px; display: grid; gap: 10px; min-width: 0; }
+.wrap > *, .panel > *, .prep-result > * { min-width: 0; }
+.sheet-bar { display: flex; justify-content: flex-end; margin-bottom: -6px; }
+.sheet .logo { width: min(180px, 60%); }
+.sheet h3 { font-size: 22px; padding-bottom: 6px; border-bottom: 2px solid var(--rule); }
+.sheet .tonight { display: grid; gap: 2px; }
+.sheet .tonight b.g { color: var(--brand); }
+.sheet .signoff { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; }
+.sheet .signoff b { white-space: nowrap; }
+.sheet h4 { margin: 8px 0 0; font-family: var(--font-display); font-weight: 600; font-size: 17px; color: var(--brand); }
+.sheet h4 span { margin-left: 10px; font-family: var(--font-body); font-weight: 400; font-style: italic; font-size: 14px; color: var(--muted); }
+.sheet table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.35; }
+.sheet th { padding: 6px 8px; text-align: left; font-weight: 600; color: var(--on-brand); background: var(--brand); }
+.sheet td { padding: 6px 8px; vertical-align: top; border-top: 1px solid var(--line); }
+.sheet tr.alt td { background: var(--brand-soft); }
+.sheet tr.band td { background: var(--band); }
+.sheet tr.band b { color: var(--brand); }
+.sheet td.box { width: 22px; }
+.sheet td.box::before { content: ""; display: inline-block; width: 14px; height: 14px; border: 1.5px solid var(--brand); border-radius: 2px; vertical-align: -2px; }
+.sheet td.time { width: 5.2em; white-space: nowrap; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sheet td.item { width: 32%; }
+.table-scroll { overflow-x: auto; }
 
 .status-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; border-top: 1px solid var(--line); padding-top: 8px; }
 .status { color: var(--muted); font-size: 14px; flex: 1 1 260px; }
@@ -211,9 +232,17 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
   .fields .field:first-child { grid-column: 1 / -1; }
   .titlebar h1 { font-size: 24px; }
   .panel { padding: 16px; }
+  .sheet { padding: 12px 8px 14px; }
+  .sheet h3 { font-size: 20px; }
+  .sheet table { font-size: 14px; }
+  .sheet th, .sheet td { padding: 5px 4px; }
+  .sheet td.box { width: 16px; }
+  .sheet td.time { width: auto; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .panel, .result { animation: rise 160ms ease-out; }
+  /* Only the two forms that open once. The menu panel and the prep list are redrawn on
+     every change, and a fade there would replay on each tap. */
+  #guestForm, #kitchenForm { animation: rise 160ms ease-out; }
   @keyframes rise { from { transform: translateY(4px); opacity: 0.6; } to { transform: none; opacity: 1; } }
 }
 </style>
@@ -280,9 +309,18 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
     <div id="serviceList"></div>
   </main>
 
-  <section class="section build" aria-labelledby="buildTitle">
+  <section class="section" aria-labelledby="buildTitle">
     <div class="section-head"><h2 id="buildTitle">Prep List</h2></div>
-    <div class="panel" id="buildPanel"></div>
+    <div class="panel">
+      <div class="prep-pick">
+        <div class="field">
+          <label for="prepDate">Prep day</label>
+          <input id="prepDate" type="date">
+        </div>
+        <button type="button" class="btn primary" id="prepBtn" data-action="prep" disabled>Prep List</button>
+      </div>
+      <div id="prepPanel"></div>
+    </div>
   </section>
 
   <div class="status-row">
@@ -323,9 +361,10 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
     menuFor: null,        // service id whose menu is being picked
     confirmRemove: null,  // service id waiting on "Remove?"
     excluded: new Set(),  // services unticked from the prep list
-    result: null,         // last build
-    building: false,
-    saveStatus: '',
+    prepDate: null,       // the day picked on the calendar (YYYY-MM-DD)
+    prepShown: null,      // the day whose View and Download buttons are showing
+    viewOpen: false,      // that day's sheet is open on screen
+    dlStatus: '',
     notice: '',
   };
   let col = null, downloads = null, logoBytes = null, fsdb = null, unsubscribe = null;
@@ -536,52 +575,106 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
     </section>`;
   };
 
-  const DENSITY = { normal: '10 pt', compact: '9 pt', tight: '8 pt' };
-  const renderBuild = () => {
-    const el = $('#buildPanel');
-    if (!state.menu) { el.innerHTML = '<p>Loading the menu.</p>'; return; }
-    if (state.mode === 'kitchen') { el.innerHTML = '<p>Open your kitchen above to see its dinners and build their prep list.</p>'; return; }
-    const list = included();
-    const unfinished = list.filter((s) => !isComplete(s));
-    let summary;
-    if (!list.length) summary = upcoming().length ? 'Tick at least one dinner to build its prep list.' : 'Add a dinner service to build its prep list.';
-    else summary = `Builds ${list.length} dinner${list.length === 1 ? '' : 's'}, ${shortDay(list[0].date)}${list.length > 1 ? ` to ${shortDay(list[list.length - 1].date)}` : ''}. One sheet per prep day; dinners that share a prep day share its sheet.`;
-    const hint = unfinished.length
-      ? `<p class="hint">Finish the menu for ${unfinished.map((s) => `${esc(s.host)} (${esc(shortDay(s.date))})`).join(', ')}, or untick ${unfinished.length === 1 ? 'it' : 'them'}.</p>`
-      : '';
-    const noLib = !window.docx ? '<p class="hint">The document library did not load. Check the connection and reload the page.</p>' : '';
-    const canBuild = list.length && !unfinished.length && window.docx && !state.building;
-    el.innerHTML = `<div class="build-row">
-        <p>${esc(summary)}</p>
-        <button type="button" class="btn primary" data-action="build" data-key="build" ${canBuild ? '' : 'disabled'}>${state.building ? 'Building\u2026' : 'Build Prep List'}</button>
-      </div>${hint}${noLib}${renderResult()}`;
+  // ---- Prep list for one day ----------------------------------------------------
+  // The schedule for every ticked dinner, worked out once per change to the dinners.
+  let schedCache = { sig: null, value: null };
+  const scheduleFor = (list) => {
+    const request = requestFor(list);
+    const sig = JSON.stringify(request);
+    if (schedCache.sig !== sig) {
+      let value;
+      try { value = { sheets: P.build({ menu: state.menu, request }).sheets }; }
+      catch (e) { value = { error: e instanceof P.PrepError ? e.message : String((e && e.message) || e) }; }
+      schedCache = { sig, value };
+    }
+    return schedCache.value;
   };
 
-  const renderResult = () => {
-    const r = state.result;
-    if (!r) return '';
-    const stale = JSON.stringify(requestFor(included())) !== r.signature;
+  const renderPrep = () => {
+    const el = $('#prepPanel'), btn = $('#prepBtn');
+    const blocked = (html) => { btn.disabled = true; el.innerHTML = html; };
+    if (!state.menu) return blocked('<p>Loading the menu.</p>');
+    if (state.mode === 'kitchen') return blocked('<p>Open your kitchen above to see its dinners and their prep.</p>');
+    const list = included();
+    if (!list.length) return blocked(`<p>${upcoming().length ? 'Tick at least one dinner to see its prep.' : 'Add a dinner service to see its prep.'}</p>`);
+    const unfinished = list.filter((s) => !isComplete(s));
+    if (unfinished.length) {
+      return blocked(`<p class="hint">Finish the menu for ${unfinished.map((s) => `${esc(s.host)} (${esc(shortDay(s.date))})`).join(', ')}, or untick ${unfinished.length === 1 ? 'it' : 'them'}.</p>`);
+    }
+    const sched = scheduleFor(list);
+    if (sched.error) return blocked(`<p class="hint">The prep list couldn't be worked out: ${esc(sched.error)}</p>`);
+    btn.disabled = false;
+    const days = `<div class="prep-days"><span>Days with prep:</span>${sched.sheets.map((s) => `<button type="button" class="chip" data-action="pick-day" data-date="${s.key}" data-key="day-${s.key}" aria-pressed="${s.key === state.prepDate}">${esc(P.shortDate(s.date))}</button>`).join('')}</div>`;
+    let shown = '';
+    const key = state.prepShown;
+    if (key && key < todayKey) {
+      shown = `<div class="prep-result"><p class="hint">That day has passed. Anything left from it is at the top of today's sheet.</p></div>`;
+    } else if (key) {
+      const sheet = sched.sheets.find((s) => s.key === key);
+      shown = sheet ? prepResult(sheet)
+        : `<div class="prep-result"><p class="prep-head"><strong>${esc(longDay(key))}</strong></p><p>Nothing to prep that day.</p></div>`;
+    }
+    el.innerHTML = days + shown;
+  };
+
+  const guestWord = (s) => (s.guests ? `${s.guests} guests` : 'guest count TBD');
+  const prepResult = (sheet) => {
+    const n = sheet.counts;
+    const parts = [n.pastDue && `${n.pastDue} past due`, n.advance && `${n.advance} advance prep`, n.timed && `${n.timed} on the service timeline`].filter(Boolean);
+    const tonight = sheet.tonight.length
+      ? `Dinner tonight: ${sheet.tonight.map((s) => `${s.host || 'Dinner'}, ${s.menuLabel}, ${guestWord(s)}`).join('; ')}.`
+      : 'No dinner service tonight. Advance prep only.';
     const notes = [];
-    if (r.pastDue) notes.push(`<li class="alert"><b>${r.pastDue} task${r.pastDue === 1 ? ' is' : 's are'} past due.</b> ${r.pastDue === 1 ? 'It is' : 'They are'} at the top of today's sheet under Past Due: Do First. Check whether the menu still works.</li>`);
-    for (const w of r.warnings) notes.push(`<li class="alert"><b>Batch warning.</b> ${esc(w)}</li>`);
-    for (const d of r.spill) notes.push(`<li class="alert"><b>${esc(d)}</b> may run onto a second page, even at 8 pt.</li>`);
-    for (const b of r.batches) notes.push(`<li>${esc(b)}</li>`);
-    for (const f of r.frozen) notes.push(`<li>${esc(f)}</li>`);
-    const rows = r.sheets.map((s) => `<tr>
-      <td>${esc(s.day)}</td><td class="tonight">${esc(s.tonight)}</td>
-      <td class="num">${s.pastDue || ''}</td><td class="num">${s.advance}</td><td class="num">${s.timed}</td><td>${s.size}</td></tr>`).join('');
-    return `<div class="result" aria-live="polite">
-      <p class="result-head"><strong>${r.sheets.length} prep sheet${r.sheets.length === 1 ? '' : 's'}</strong> &middot; ${r.boxes} check boxes &middot; ${esc(r.span)}</p>
-      ${stale ? '<p class="stale">The dinners changed since this build. Build again for an up-to-date prep list.</p>' : ''}
+    if (n.pastDue) notes.push(`<li><b>${n.pastDue} task${n.pastDue === 1 ? ' is' : 's are'} past due.</b> ${n.pastDue === 1 ? 'It is' : 'They are'} at the top of the sheet under Past Due: Do First. Check whether the menu still works.</li>`);
+    if (sheet.maySpill) notes.push('<li><b>A full day.</b> The printed sheet may run onto a second page, even in its smallest text.</li>');
+    const canDownload = canSave() && !!window.docx;
+    const status = !window.docx ? 'The document library did not load. Reload the page to download.'
+      : !canSave() ? 'Downloading works when this page is open in Claude.' : state.dlStatus;
+    return `<div class="prep-result" aria-live="polite">
+      <p class="prep-head"><strong>${esc(longDay(sheet.key))}</strong> &middot; ${esc(parts.join(', '))}</p>
+      <p>${esc(tonight)}</p>
       ${notes.length ? `<ul class="notes">${notes.join('')}</ul>` : ''}
-      <div class="table-scroll"><table class="sheets">
-        <thead><tr><th>Prep day</th><th>Dinner that night</th><th class="num">Past due</th><th class="num">Advance</th><th class="num">Timeline</th><th>Text</th></tr></thead>
-        <tbody>${rows}</tbody></table></div>
       <div class="save-row">
-        <button type="button" class="btn primary" data-action="save" data-key="save" ${canSave() ? '' : 'disabled'}>Save Prep List (.docx)</button>
-        <span class="save-status">${esc(canSave() ? state.saveStatus || r.filename : 'Saving files works when this page is open in Claude.')}</span>
+        <button type="button" class="btn primary" data-action="view" data-key="view" aria-expanded="${state.viewOpen}">View Prep List</button>
+        <button type="button" class="btn" data-action="download" data-key="download" ${canDownload ? '' : 'disabled'}>Download Prep List</button>
+        <span class="save-status">${esc(status || '')}</span>
       </div>
+      ${state.viewOpen ? sheetView(sheet) : ''}
     </div>`;
+  };
+
+  // The day's sheet on screen, laid out like the printed one: Past Due, Advance Prep, then
+  // the Service Timeline, each with a box per task.
+  const COURSE_LABELS = [['Appetizers', 'appetizers'], ['Salad or Soup', 'salad'], ['Dinner', 'dinner'], ['Dessert', 'dessert']];
+  const sheetView = (sheet) => {
+    const svcTag = (s) => `${P.shortDate(s.date)} dinner${s.host ? ` | ${s.host}` : ''}`;
+    const band = (svc, cols) => `<tr class="band"><td colspan="${cols}"><b>For ${esc(svcTag(svc))}</b> &nbsp; ${esc(svc.menuLabel)} &nbsp;|&nbsp; ${esc(guestWord(svc))}</td></tr>`;
+    const grouped = (groups, head, cells) => `<div class="table-scroll"><table>
+      <thead><tr><th aria-label="Done"></th>${head.map((h) => `<th>${h}</th>`).join('')}</tr></thead>
+      <tbody>${groups.map(([svc, rows]) => band(svc, head.length + 1) + rows.map((r, i) =>
+        `<tr${i % 2 ? ' class="alt"' : ''}><td class="box"></td>${cells(r)}</tr>`).join('')).join('')}</tbody></table></div>`;
+    const tonight = sheet.tonight.length ? sheet.tonight.map((s) => {
+      const served = new Set(s.componentNames.map((c) => state.menu.components[c].course));
+      const courses = COURSE_LABELS.filter(([, c]) => s.times[c] != null && served.has(c))
+        .map(([label, c]) => `${label} ${P.clock(s.times[c]).replace(/ [AP]M$/, '')}`).join('  |  ');
+      return `<p><b class="g">Tonight:</b> <b>${esc(`${s.host ? s.host + '  |  ' : ''}${s.menuLabel}  |  ${guestWord(s)}`)}</b></p><p>${esc(courses)} PM</p>`;
+    }).join('') : '<p><b>No dinner service tonight. Advance prep only.</b></p>';
+    const start = sheet.timed.length ? sheet.timed[0].minute : null;
+    return `<article class="sheet" aria-label="Prep list for ${esc(longDay(sheet.key))}">
+      <div class="sheet-bar"><button type="button" class="btn quiet" data-action="close-view" data-key="close-view">Close</button></div>
+      <div class="logo" role="img" aria-label="Five Oaks"></div>
+      <h3>Prep List: ${esc(P.longDate(sheet.date))}</h3>
+      <div class="tonight">${tonight}</div>
+      <p class="signoff"><span></span><span><b>Prepped: _________</b> &nbsp; <b>Checked: _________</b></span></p>
+      ${sheet.pastDue.length ? `<h4>Past Due: Do First</h4><p class="save-status">These were scheduled before today. Do them now, or tell the chef if the service plan has to change.</p>
+        ${grouped(sheet.pastDue, ['Was Due', 'Item', 'Task'], (r) => `<td class="time">${esc(P.shortDate(r.dueDate))}</td><td class="item">${esc(r.component)}</td><td>${esc(r.text)}</td>`)}` : ''}
+      ${sheet.advance.length ? `<h4>Advance Prep<span>${esc(start != null ? `Any time today. Finish before the timeline starts at ${P.clock(start)}.` : 'Any time today, for the dinners named in each band.')}</span></h4>
+        ${grouped(sheet.advance, ['Item', 'Task'], (r) => `<td class="item">${esc(r.component)}</td><td>${esc(r.text)}</td>`)}` : ''}
+      ${sheet.timed.length ? `<h4>Service Timeline</h4><div class="table-scroll"><table>
+        <thead><tr><th aria-label="Done"></th><th>Time</th><th>Item</th><th>Task</th></tr></thead>
+        <tbody>${sheet.timed.map((r, i) => `<tr${i % 2 ? ' class="alt"' : ''}><td class="box"></td><td class="time">${esc(P.clock(r.minute))}</td>
+          <td class="item">${esc(r.components.join(', ') + (r.svc.key !== sheet.key ? ` (for ${P.shortDate(r.svc.date)} dinner)` : ''))}</td><td>${esc(r.text)}</td></tr>`).join('')}</tbody></table></div>` : ''}
+    </article>`;
   };
 
   const renderStatus = () => {
@@ -601,7 +694,7 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
     const key = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.key : null;
     renderMenuPanel();
     renderList();
-    renderBuild();
+    renderPrep();
     renderStatus();
     $('#addBtn').disabled = state.readOnly || state.mode === 'loading' || state.mode === 'kitchen' || !state.menu;
     $('#kitchenForm').hidden = state.mode !== 'kitchen';
@@ -708,67 +801,46 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
     try { await openKitchen(code); } catch (e) { state.mode = 'error'; render(); }
   });
 
-  // ---- Build and save ---------------------------------------------------------
-  const multWord = (n) => (n === 2 ? 'Double' : n === 3 ? 'Triple' : `${n}x`);
-  const svcShort = (s) => `${s.host ? s.host + ' ' : ''}${s.date.getMonth() + 1}/${s.date.getDate()}`;
-  const build = async () => {
-    const list = included();
-    const request = requestFor(list);
-    state.building = true; state.saveStatus = ''; render();
-    try {
-      if (!logoBytes) logoBytes = new Uint8Array(await (await fetch('FiveOaksLogo.png')).arrayBuffer());
-      const r = P.build({ menu: state.menu, request, docx: window.docx, logo: logoBytes });
-      const blob = await window.docx.Packer.toBlob(r.doc);
-      const first = list[0].date, last = list[list.length - 1].date;
-      state.result = {
-        signature: JSON.stringify(request),
-        blob, filename: `${r.stem}.docx`, boxes: r.boxes,
-        span: first === last ? shortDay(first) : `${shortDay(first)} to ${shortDay(last)}`,
-        pastDue: r.sheets.reduce((n, s) => n + s.counts.pastDue, 0),
-        warnings: r.warnings,
-        spill: r.sheets.filter((s) => s.maySpill).map((s) => P.shortDate(s.date)),
-        batches: Object.entries(r.batchUsers).map(([name, users]) => `${name}: ${multWord(users.length).toLowerCase()} batch, made once for ${users.map(svcShort).join(' + ')}.`),
-        frozen: r.frozenShares.map((f) => `${f.name}: the ${svcShort(f.svc)} share is frozen the day the batch is made (${P.shortDate(f.made)}) and thawed the day before that dinner.`),
-        sheets: r.sheets.map((s) => ({
-          day: P.shortDate(s.date),
-          tonight: s.tonight.length ? s.tonight.map((t) => `${t.host || 'Dinner'}: ${t.menuLabel}`).join('; ') : 'Advance prep only',
-          pastDue: s.counts.pastDue, advance: s.counts.advance, timed: s.counts.timed,
-          size: DENSITY[s.density.name] || s.density.name,
-        })),
-      };
-      state.building = false;
-      render();
-      await save();
-    } catch (e) {
-      state.building = false;
-      state.result = null;
-      state.notice = e instanceof P.PrepError ? `The prep list couldn't be built: ${e.message}` : `The prep list couldn't be built. ${e && e.message ? e.message : ''}`;
-      render();
-    }
-  };
+  // ---- Download one day's sheet ----------------------------------------------
   // In Claude a save goes through the downloads capability; outside it, a plain download.
   const canSave = () => !!downloads || !inClaude;
-  const save = async () => {
-    const r = state.result;
-    if (!r || !canSave()) return;
+  const saveFile = async (filename, blob) => {
     if (!downloads) {
-      const url = URL.createObjectURL(r.blob);
-      const a = Object.assign(document.createElement('a'), { href: url, download: r.filename });
+      const url = URL.createObjectURL(blob);
+      const a = Object.assign(document.createElement('a'), { href: url, download: filename });
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 60000);
-      state.saveStatus = `Downloaded ${r.filename}.`;
-      render();
+      state.dlStatus = `Downloaded ${filename}.`;
       return;
     }
     try {
-      const res = await downloads.save({ filename: r.filename, data: r.blob });
-      state.saveStatus = res && res.status === 'delivered' ? `Sent ${r.filename}.` : `Saved ${r.filename}.`;
+      const res = await downloads.save({ filename, data: blob });
+      state.dlStatus = res && res.status === 'delivered' ? `Sent ${filename}.` : `Saved ${filename}.`;
     } catch (e) {
       const code = e && e.code;
-      state.saveStatus = code === 'declined' ? 'Not saved. Press Save Prep List to try again.'
+      state.dlStatus = code === 'declined' ? 'Not saved. Press Download Prep List to try again.'
         : code === 'rate_limited' ? 'A save is already waiting for your answer.'
         : "Saving files isn't available in this view.";
     }
+  };
+  const downloadDay = async () => {
+    const key = state.prepShown;
+    if (!key || !canSave() || !window.docx) return;
+    state.dlStatus = 'Preparing the file\u2026'; render();
+    try {
+      if (!logoBytes) logoBytes = new Uint8Array(await (await fetch('FiveOaksLogo.png')).arrayBuffer());
+      const r = P.build({ menu: state.menu, request: requestFor(included()), docx: window.docx, logo: logoBytes, only: key });
+      if (!r.doc) state.dlStatus = 'Nothing to prep that day.';
+      else await saveFile(`${r.stem}.docx`, await window.docx.Packer.toBlob(r.doc));
+    } catch (e) {
+      state.dlStatus = e instanceof P.PrepError ? `The prep list couldn't be built: ${e.message}` : "The prep list couldn't be built. Reload the page and try again.";
+    }
+    render();
+  };
+  const pickDay = (key) => {
+    state.prepDate = key;
+    $('#prepDate').value = key;
+    Object.assign(state, { prepShown: null, viewOpen: false, dlStatus: '' });
     render();
   };
 
@@ -804,13 +876,25 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
         render();
         $('#addBtn').focus();
         break;
-      case 'build': build(); break;
-      case 'save': save(); break;
+      case 'prep':
+        state.prepDate = $('#prepDate').value || todayKey;
+        Object.assign(state, { prepShown: state.prepDate, viewOpen: false, dlStatus: '' });
+        render();
+        break;
+      case 'pick-day': pickDay(el.dataset.date); break;
+      case 'view':
+        state.viewOpen = !state.viewOpen;
+        render();
+        if (state.viewOpen) { const s = $('.sheet'); if (s) s.scrollIntoView({ block: 'start', behavior: 'smooth' }); }
+        break;
+      case 'close-view': state.viewOpen = false; render(); $('[data-action="view"]').focus(); break;
+      case 'download': downloadDay(); break;
       case 'change-kitchen': leaveKitchen(); break;
     }
   });
   document.addEventListener('change', (ev) => {
     const el = ev.target;
+    if (el.id === 'prepDate') { pickDay(el.value || todayKey); return; }
     if (el.dataset && el.dataset.action === 'include') {
       if (el.checked) state.excluded.delete(el.dataset.id); else state.excluded.add(el.dataset.id);
       render();
@@ -819,6 +903,9 @@ table.sheets td.tonight { white-space: normal; min-width: 160px; }
 
   // ---- Start ------------------------------------------------------------------
   $('#todayLine').textContent = P.longDate(dateOf(todayKey));
+  state.prepDate = todayKey;
+  $('#prepDate').value = todayKey;
+  $('#prepDate').min = todayKey;
   render();
   fetch('menu.json').then((r) => r.json()).then((m) => { state.menu = m; render(); })
     .catch(() => { state.notice = "The menu couldn't load. Reload the page to try again."; render(); });
