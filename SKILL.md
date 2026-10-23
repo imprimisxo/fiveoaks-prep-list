@@ -36,7 +36,8 @@ say "per SOP"; those SOPs live in `/Users/cheflance/Five_Oaks/SOP/`.
 | Path | What it is |
 |---|---|
 | `data/menu.json` | The source of truth: service times, meals, desserts, and each component's tasks in Chef's own wording |
-| `scripts/build_prep_list.js` | Schedules the tasks and writes the .docx. Prints the full schedule as text |
+| `scripts/build_prep_list.js` | Command line generator: reads the request, writes the .docx, prints the full schedule as text |
+| `scripts/prep_core.js` | The scheduling and document code itself, shared by the generator and the web app |
 | `scripts/render_docx.sh` | Renders a .docx through Microsoft Word to PDF and page PNGs |
 | `references/selection_menu.md` | The salad or soup, dinner, and dessert selection menu shown when Chef gives a host and date |
 | `assets/FiveOaksLogo.png` | Green FIVE OAKS mallard wordmark, 700 x 204 |

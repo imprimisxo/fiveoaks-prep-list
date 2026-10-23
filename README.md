@@ -11,7 +11,8 @@ offsets.
 |---|---|
 | `SKILL.md` | The skill's instructions: how bookings become sheets, and Chef's standing decisions |
 | `data/menu.json` | The menu and every prep task with its timing. This is the source of truth |
-| `scripts/build_prep_list.js` | Schedules the tasks and writes the Word file |
+| `scripts/build_prep_list.js` | Command line generator: writes the Word file and prints the schedule |
+| `scripts/prep_core.js` | The scheduling and Word file code, shared by the generator and the web app |
 | `scripts/render_docx.sh` | Renders the Word file to PDF through Microsoft Word, for checking |
 | `references/selection_menu.md` | The salad or soup, dinner, and dessert pick list |
 | `assets/FiveOaksLogo.png` | The Five Oaks logo printed on each sheet |
