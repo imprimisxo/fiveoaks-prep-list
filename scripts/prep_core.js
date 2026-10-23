@@ -129,14 +129,17 @@ const BODY_PT = (11 - 0.5 - 0.7) * 72;   // letter page minus top and bottom mar
 const FIT_MARGIN = 8;
 const CHAR_EM = 0.40;
 
-function build({ menu: MENU, request: REQ, docx, logo: logoBuffer, fonts = {} }) {
+// Without `docx` only the schedule is built (doc is null), which is how the web app reads
+// a day's tasks for its on-screen sheet. `only` (YYYY-MM-DD) limits the document to that
+// one prep day.
+function build({ menu: MENU, request: REQ, docx, logo: logoBuffer, fonts = {}, only = null }) {
   const {
     Document, Paragraph, TextRun, ImageRun, AlignmentType,
     Table, TableRow, TableCell, WidthType, BorderStyle, ShadingType, TableLayoutType,
     Footer, PageNumber, TabStopType, TabStopPosition, Tab,
     convertInchesToTwip,
-  } = docx;
-  if (!logoBuffer) fail('Five Oaks logo not found. Ask for upload, do not generate without it.');
+  } = docx || {};
+  if (docx && !logoBuffer) fail('Five Oaks logo not found. Ask for upload, do not generate without it.');
 
   // ==========================================================================
   // SCHEDULE
@@ -542,11 +545,16 @@ function build({ menu: MENU, request: REQ, docx, logo: logoBuffer, fonts = {} })
   });
 
   // ---- Document -------------------------------------------------------------
+  // Every sheet gets its density even when no document is built: the report and the web
+  // app's on-screen sheet both use it.
+  for (const s of sheets) { s.density = pickDensity(s); s.estimate = estimateSheet(s, s.density); }
+  const docSheets = only ? sheets.filter((s) => s.key === only) : sheets;
   const first = services[0], last = services[services.length - 1];
-  const span = first.key === last.key ? shortDate(first.date) : `${shortDate(first.date)} to ${shortDate(last.date)}`;
+  const span = only ? shortDate(parseYMD(only))
+    : first.key === last.key ? shortDate(first.date) : `${shortDate(first.date)} to ${shortDate(last.date)}`;
   const footerText = `Five Oaks Prep List | ${REQ.label ? REQ.label + ' | ' : ''}${span}`;
 
-  const doc = new Document({
+  const doc = !docx || !docSheets.length ? null : new Document({
     creator: 'Five Oaks Duck Lodge',
     title: `Five Oaks Prep List ${span}`,
     sections: [{
@@ -574,9 +582,8 @@ function build({ menu: MENU, request: REQ, docx, logo: logoBuffer, fonts = {} })
           ],
         })] }),
       },
-      children: [...sheets.flatMap((s, i) => {
-        D = s.density = pickDensity(s);
-        s.estimate = estimateSheet(s, D);
+      children: [...docSheets.flatMap((s, i) => {
+        D = s.density;
         return sheetChildren(s, i === 0);
       }), endSpacer()],
     }],
@@ -584,7 +591,8 @@ function build({ menu: MENU, request: REQ, docx, logo: logoBuffer, fonts = {} })
 
   // ---- Report ---------------------------------------------------------------
   const slug = (s) => String(s).replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '');
-  const stem = ['FiveOaks_Prep_List', first.key, ...(first.key !== last.key ? ['to', last.key] : []), ...(REQ.label ? [slug(REQ.label)] : [])].join('_');
+  const stem = ['FiveOaks_Prep_List', ...(only ? [only] : [first.key, ...(first.key !== last.key ? ['to', last.key] : [])]),
+    ...(REQ.label ? [slug(REQ.label)] : [])].join('_');
 
   // Plain-text schedule, so the run can be checked and summarized without opening the
   // document.
@@ -610,5 +618,5 @@ function build({ menu: MENU, request: REQ, docx, logo: logoBuffer, fonts = {} })
   return { doc, report, stem, sheets, boxes, services, warnings, frozenShares, batchUsers, todayStr, fonts: { head: headFace, body: bodyFace, box: BOX_FONT } };
 }
 
-return { build, PrepError, parseTask, longDate, shortDate, parseYMD, ymd };
+return { build, PrepError, parseTask, longDate, shortDate, parseYMD, ymd, clock };
 });
