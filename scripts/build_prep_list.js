@@ -1,17 +1,15 @@
 // Five Oaks Prep List generator.
 //
-// Reads the menu (data/menu.json) and a request naming the services (date, guests, meal,
-// dessert), back-schedules every component task from its course time, and writes ONE
-// .docx with one dated sheet per prep day. Tasks for different services that land on the
-// same day share that day's sheet.
+// Reads the menu (data/menu.json) and a request naming the services (date, host, guests,
+// salad or soup, meal, dessert), back-schedules every component task from its course
+// time, and writes ONE .docx with one dated sheet per prep day. Tasks for different
+// services that land on the same day share that day's sheet.
 //
 //   npm init -y && npm install docx --no-audit --no-fund      (in a scratch dir)
 //   NODE_PATH=$PWD/node_modules node <skill>/scripts/build_prep_list.js request.json
 //   NODE_PATH=$PWD/node_modules node <skill>/scripts/build_prep_list.js request.json --out /tmp/x.docx
 //
-// Request shape (see SKILL.md, Step 2):
-//   { "label": "Smith Party", "today": "2026-10-22",
-//     "services": [ { "date": "2026-11-06", "guests": 14, "meal": 1, "dessert": "cheesecake" } ] }
+// Request shape: see SKILL.md, Step 2.
 //
 // Then validate with scripts/render_docx.sh, see SKILL.md Step 4.
 

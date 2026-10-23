@@ -12,7 +12,7 @@ course order. Appetizers are separate and have no menu here.
    conversation. It is silent setup, so don't mention it.
 2. Call `show_widget` with the HTML below, filled in for the booking.
 3. The answers come back as one line, for example
-   `Dinner details — Jones salad: caesar-salad · Jones dinner: 1 · Jones dessert: cheesecake · Jones guests: 9`.
+   `Dinner details — <Host> salad: <key> · <Host> dinner: <1-5> · <Host> dessert: <key> · <Host> guests: <count>`.
    Map `salad` to the request's `salad`, `dinner` to `meal`, and `dessert` to `dessert`.
    `none` means that course is skipped. Then continue at Step 2 of SKILL.md.
 

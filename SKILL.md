@@ -8,10 +8,10 @@ description: >
   land on the same day share that day's sheet. Output is a Five Oaks branded .docx plus a
   print PDF. Use whenever the user asks for a Five Oaks prep list, prep schedule, prep
   sheets, prep calendar, or "what do we need to prep" for a lodge dinner, hunting party, or
-  group stay, including short asks like "prep list for Nov 6, 14 guests, meal 1 with
-  cheesecake" or "we have a group Fri-Sun, build the prep sheets". Also use when Chef just
-  gives a host name and a dinner date ("Brown, Dec 4"): that brings up the salad or soup,
-  dinner, and dessert selection menus. Also use to add or change a Five Oaks salad, soup,
+  group stay, including short asks that give a date, a guest count, and a meal number or
+  dessert, or "we have a group Fri-Sun, build the prep sheets". Also use when Chef just
+  gives a host name and a dinner date: that brings up the salad or soup, dinner, and
+  dessert selection menus. Also use to add or change a Five Oaks salad, soup,
   meal, dessert, component, service time, or prep timing. For turning a recipe
   into an SOP use fiveoaks-sop. For PBCC, PVCC, or ChefMac station checklists use their own
   prep-list skills.
@@ -85,14 +85,15 @@ matter too: dessert prep starts up to ten days out, and the gumbo seven.
 
 ## Step 2: Write the request
 
-Write a small JSON file in the scratchpad:
+Write a small JSON file in the scratchpad, one entry in `services` per dinner, filled in
+from the booking. In this shape, angle brackets mark values to fill in:
 
-```json
+```
 {
-  "label": "Smith Party",
   "services": [
-    { "date": "2026-11-06", "guests": 14, "salad": "caesar-salad", "meal": 1, "dessert": "cheesecake" },
-    { "date": "2026-11-07", "guests": 14, "salad": "none", "meal": 3, "dessert": "bread-pudding" }
+    { "date": "YYYY-MM-DD", "host": "<party name>", "guests": <count>,
+      "salad": "<salad or soup key, number, or none>", "meal": <1-5>,
+      "dessert": "<dessert key or none>" }
   ]
 }
 ```
@@ -101,7 +102,7 @@ Optional fields:
 
 - `label` names the group. It goes in the filename and footer. Leave it out when each
   night is a different party.
-- `host` on a service is that night's party name, for example `"host": "Jones"`. It prints
+- `host` on a service is that night's party name, as the reservation gives it. It prints
   on the Tonight line and on every band for that dinner. Always include it when the
   reservation names a host: on back-to-back nights it's how the cooks tell the bands apart.
 - `today` (`YYYY-MM-DD`) backdates the run. Leave it out and the generator uses today's
@@ -115,7 +116,7 @@ Optional fields:
   for example `["Classic Cheesecake", "Homemade Hot Fudge"]`. The component's first
   `batch_steps` tasks in `menu.json` (the make-ahead run) happen once, on the earliest
   dinner's dates. The task text names the batch size and the dinners it covers:
-  "(double batch for Smith 11/21 + McAfee 11/24)". Each dinner keeps its own later tasks
+  "(double batch for <host> <m/d> + <host> <m/d>)". Each dinner keeps its own later tasks
   (thaw, reheat, plate). Only components with `batch_steps` can be batched; today that's
   the cheesecake and the hot fudge.
 
