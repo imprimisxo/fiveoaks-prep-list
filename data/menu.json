@@ -91,10 +91,12 @@
   "components": {
     "Five Oaks Ranch Salad": {
       "course": "salad",
+      "_note": "Chef's call of 2026-10-25: this is FiveOaks_SOP_Spring_Mix_Salad_with_Peppercorn_Ranch_Dressing. Chef added the SOP's vegetable prep at -1 hour and kept his lettuce tasks as written; the SOP itself is unchanged (it says ready-to-eat spring mix is not rewashed).",
       "tasks": [
         "-2 days, make, and store, ranch dressing",
         "-4 hours, cut and wash lettuce",
         "-3 ½ hours, place cut lettuce in a paper towel lined bowl then reefer",
+        "-1 hours, prep the veggies per SOP: halve and drain cherry tomatoes; slice cucumber, radishes, and red onion, saving the best radish slices for garnish; shred cheddar; hold each covered in reefer",
         "-30 minutes, mise croutons",
         "-15 minutes, toss lettuce with dressing, add croutons",
         "0 hours, plate and serve"
@@ -102,7 +104,7 @@
     },
     "House Bacon Salad": {
       "course": "salad",
-      "_note": "Matches FiveOaks_SOP_Wilted_Spinach_Salad_with_Hot_Bacon_Dressing.",
+      "_note": "Based on FiveOaks_SOP_Wilted_Spinach_Salad_with_Hot_Bacon_Dressing. Chef's call of 2026-10-25: keep these tasks as written even where the SOP differs (the SOP holds the spinach cold until the toss, stands the eggs off the heat 12 minutes, and allows eggs and bacon the day before). Chef will adjust from experience, so don't flag the differences.",
       "tasks": [
         "-6 hours, cook bacon, reserve fat",
         "-6 hours, boil eggs 10 minutes, ice bath",
@@ -126,14 +128,14 @@
     },
     "Duck Gumbo": {
       "course": "salad",
-      "_note": "Chef's list of 2026-10-23. FiveOaks_SOP_Duck_Confit_Gumbo allows 3-4 days refrigerated or frozen up to 2 months with a 24-48 hour thaw, so Chef added the freeze (-7 days) and thaw (-2 days) steps the same day.",
+      "_note": "Chef's list of 2026-10-23. FiveOaks_SOP_Duck_Confit_Gumbo allows 3-4 days refrigerated or frozen up to 2 months with a 24-48 hour thaw, so Chef added the freeze (-7 days) and thaw (-2 days) steps the same day. On 2026-10-25 Chef moved the duck fold-in from -2 hours to -1 hour: the SOP's best window is 1 hour after the duck goes in.",
       "tasks": [
         "-7 days, make the gumbo, keep duck separate",
         "-7 days, freeze the gumbo and the duck separately per SOP: labeled airtight containers, 1 in headspace",
         "-2 days, pull the gumbo and the duck from freezer to reefer to thaw",
         "-4 hours, wash and cook rice",
         "-3 hours, hold the rice in warm oven; slice scallions and chop parsley",
-        "-2 hours, fold in the duck and simmer to 165°F",
+        "-1 hours, fold in the duck and simmer to 165°F",
         "-30 minutes, finish and season the gumbo; warm the bowls",
         "0 hour, plate and serve"
       ]
@@ -154,19 +156,20 @@
     },
     "Sauteed Wild Mushrooms": {
       "course": "dinner",
+      "_note": "Chef's call of 2026-10-25: follow FiveOaks_SOP_Sauteed_Wild_Mushrooms_Madeira_Thyme_Pan_Sauce, which says do not freeze. The base (Steps 1-4) is made at -2 days and refrigerated (SOP make-ahead, 3-4 days); the butter mount, lemon, and chives go in at service. Replaced the freeze at -2 days and the thaw at -1 day.",
       "tasks": [
         "-3 days, clean and trim wild mushrooms",
-        "-2 days, make the wild mushrooms sauce",
-        "-2 days, package in quart containers and freeze",
-        "-1 days, place in reefer to thaw",
-        "-1 1/2 hours, gently warm on stove"
+        "-2 days, make the wild mushrooms sauce per SOP through Step 4 (no finishing butter, lemon, or chives), cool and store in reefer",
+        "-1 1/2 hours, gently warm on stove to 165°F; cube the cold finishing butter, slice chives, juice lemon",
+        "-15 minutes, off the heat, mount the cold butter, fold in lemon juice and chives, hold at 135°F"
       ]
     },
     "Cajun Rice": {
       "course": "dinner",
+      "_note": "Chef's call of 2026-10-25: cook later. FiveOaks_SOP_Cajun_Rice says best texture within 2 hours of holding; the old -4 hour cook held about 3 hours. The SOP run is about 1 1/4 hours with mise (rinse and drain, trinity, 20-22 minute covered cook, 10 minute rest), so the cook starts at -2 1/2 hours and the hold at -1 hour, about an hour in the warm oven.",
       "tasks": [
-        "-4 hours, cook the rice",
-        "-3 hours, hold in a warm oven",
+        "-2 1/2 hours, cook the rice",
+        "-1 hours, hold in a warm oven",
         "0 hours, plate and serve"
       ]
     },
@@ -195,9 +198,10 @@
     },
     "Au Gratin Rice": {
       "course": "dinner",
+      "_note": "Chef's call of 2026-10-25: the veggie saute moved from -3 hours to -1 day with the rice. FiveOaks_SOP_Creamy_Rice_au_Gratin needs the vegetables chilled to 41°F, with all their oil, before they meet the cold rice and cream (warm vegetables make it loose and soupy), and it allows cooking them the day before.",
       "tasks": [
         "-1 days, cook rice, cool and store in reefer",
-        "-3 hours, sauté veggies",
+        "-1 days, sauté veggies, chill to 41°F with all their oil, store in reefer",
         "-2 hours, mix rice and put in oven",
         "-1 hours, hold in warm oven",
         "0 hours, plate and serve"
@@ -261,9 +265,11 @@
     },
     "Lemon Grilled Asparagus": {
       "course": "dinner",
+      "_note": "Chef's call of 2026-10-25: grill closer to service. FiveOaks_SOP_Lemon_Grilled_Asparagus holds grilled spears no more than 15 minutes and wants the last batch off within 10 minutes of plating, so grilling moved from -1 hour to -30 minutes, with the grill lit at -45 minutes (10-15 minute preheat).",
       "tasks": [
-        "-1 hours, grill the asparagus",
-        "-10 minutes, finish the asparagus with the lemon butter",
+        "-45 minutes, light the grill to medium-high, 425-450°F",
+        "-30 minutes, grill the asparagus in batches, holding each batch uncovered in a 200°F oven no more than 15 minutes",
+        "-10 minutes, toss the asparagus with the lemon butter, grilled lemon juice, and parsley",
         "-0 hours, plate and serve"
       ]
     },
@@ -279,9 +285,12 @@
     },
     "Creamy Dill Sauce": {
       "course": "dinner",
+      "_note": "Chef's call of 2026-10-25: base ahead, finish at the pass. FiveOaks_SOP_Creamy_Dill_Sauce_for_Salmon recommends the base (Steps 1-3) up to 2 days ahead and wants the dill and lemon in within 15 minutes of plating, so the thermos holds only the base. Dill is chopped no more than 2 hours ahead.",
       "tasks": [
-        "-1 hours, make creamy dill sauce",
-        "-30 minutes, store in charged thermos",
+        "-2 days, make creamy dill sauce base per SOP (no dill, lemon juice, or zest), cool and store in reefer",
+        "-1 hours, chop the dill; zest and juice the lemon",
+        "-30 minutes, warm the dill sauce base on stove to 165°F, store in charged thermos",
+        "-10 minutes, finish the sauce off the heat: stir in the dill, lemon juice, and zest",
         "0 hours, plate and serve"
       ]
     },
@@ -298,8 +307,9 @@
     },
     "Macerated Strawberry Sauce": {
       "course": "dessert",
+      "_note": "Chef's call of 2026-10-25: the sauce always gets the SOP's optional lemon zest (1 g, grated before juicing). On the Classic Cheesecake plate it replaces the Chef Jamie's SOP raspberry coulis, fresh raspberries, and the lemon zest over the slice.",
       "tasks": [
-        "-1 days, make the SOP",
+        "-1 days, make the SOP, including the lemon zest",
         "-1 days, store in an air-tight container",
         "0 days, plate and serve"
       ]
@@ -330,6 +340,7 @@
     },
     "Bread Pudding": {
       "course": "dessert",
+      "_note": "Chef confirmed this build on 2026-10-25: bake at -3 days and reheat, Bourbon Caramel sauce, whipped cream. It differs from FiveOaks_SOP_Jameson_Cranberry_Brioche_Bread_Pudding (bake on service day, brown sugar whiskey caramel, creme fraiche garnish) on purpose, so don't flag it.",
       "tasks": [
         "-10 days, collect bread scraps",
         "-3 days, make the SOP, cool overnight in reefer",

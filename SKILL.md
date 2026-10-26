@@ -384,8 +384,8 @@ which is the source of truth. Never re-import from the .docx, or they will be lo
 
 - Course times: salad or soup 7:00 PM, entrees 7:30 PM, dessert 8:00 PM. Entrees were
   7:00 PM and dessert 7:30 PM until Chef added the Salad or Soup course the same day.
-- **Sauteed Wild Mushrooms:** thaw in the reefer at -1 day, then gently warm on the stove
-  at -1 1/2 hours.
+- **Sauteed Wild Mushrooms:** gently warm on the stove at -1 1/2 hours. (The thaw at
+  -1 day was dropped on 2026-10-25; see below.)
 - **Hot fudge:** the brownie and the skillet cookie share one Homemade Hot Fudge list,
   made 5 days ahead.
 - **Prime Rib:** steaks are cut from the roast at -1 hour, not -4 days. The -15 minute
@@ -408,6 +408,36 @@ which is the source of truth. Never re-import from the .docx, or they will be lo
   added these steps on 2026-10-23, so this is settled.
 - **Macerated Strawberry Sauce:** made and stored at -1 day, not -2 days. The SOP allows
   only 2 days refrigerated and is best the day it is made. Chef moved it on 2026-10-24.
+- **SOP review of 2026-10-25** (`/Users/cheflance/Five_Oaks/FiveOaksClaudeWorkspace/reports/
+  SOP Prep Activities by Dish.md`): Chef's calls, each with a `_note` in `menu.json`.
+  - **Sauteed Wild Mushrooms:** no freeze. The SOP says the butter sauce breaks and the
+    mushrooms go spongy when frozen, so the base is made at -2 days and refrigerated, warmed
+    at -1 1/2 hours, and finished with the butter, lemon, and chives at -15 minutes.
+  - **Creamy Dill Sauce:** base at -2 days; the thermos holds only the base (warmed at -30
+    minutes); dill and lemon go in at -10 minutes, inside the SOP's 15 minute window.
+  - **Lemon Grilled Asparagus:** grill lit at -45 minutes, batches grilled from -30 minutes,
+    no batch held over 15 minutes, tossed at -10 minutes.
+  - **Au Gratin Rice:** the veggie sauté moved from -3 hours to -1 day, with the rice. The
+    SOP needs them chilled to 41°F, oil and all, before they meet the cold rice and cream.
+  - **Cajun Rice:** cooked at -2 1/2 hours and held from -1 hour, not -4 and -3. The SOP
+    says best texture within 2 hours of holding.
+  - **Five Oaks Ranch Salad:** it is FiveOaks_SOP_Spring_Mix_Salad_with_Peppercorn_Ranch_Dressing.
+    The SOP's vegetable prep (tomatoes, cucumber, radishes, red onion, cheddar) was added at
+    -1 hour. Chef kept his "cut and wash lettuce" tasks and left the SOP as it is, so don't
+    flag the rewash difference.
+  - **Duck Gumbo:** the duck fold-in moved from -2 hours to -1 hour, the SOP's best window.
+    That puts it back at 6:00 PM with the mushroom warm and the whipped cream on Meal 1
+    nights, which Chef accepted when he asked for it.
+  - **Classic Cheesecake plate:** cheesecake, Macerated Strawberry Sauce, and whipped cream.
+    The Chef Jamie's SOP raspberry coulis, fresh raspberries, and zest over the slice are
+    left off. The strawberry sauce always gets the SOP's optional lemon zest, so its task
+    reads "make the SOP, including the lemon zest."
+  - **House Bacon Salad:** unchanged on purpose. Chef keeps tempering the spinach at -1 hour,
+    boiling the eggs 10 minutes, and cooking the eggs and bacon on service day, although the
+    SOP differs on all three. He'll adjust from experience. Don't flag it.
+  - **Bread Pudding:** unchanged on purpose. Bake at -3 days and reheat, Bourbon Caramel
+    sauce, whipped cream, even though the bread pudding SOP bakes on service day with its
+    own caramel. Don't flag it.
 
 ## Style rules
 
