@@ -1,5 +1,11 @@
 # Five Oaks Prep List
 
+> **Moved.** This repo was merged into [imprimisxo/fiveoaks-prep-planner](https://github.com/imprimisxo/fiveoaks-prep-planner) on 2026-10-26 and is archived. The skill and the Prep Planner website both live there now; install from that repo:
+>
+> ```bash
+> git clone https://github.com/imprimisxo/fiveoaks-prep-planner.git ~/.claude/skills/fiveoaks-prep-list
+> ```
+
 A Claude Code skill for the Five Oaks Duck Lodge kitchen. Give it a dinner booking (date,
 host, guest count, salad or soup, entree, and dessert) and it builds dated, printable prep
 sheets, one page per prep day. Each task is back-scheduled from Chef's day and hour
