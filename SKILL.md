@@ -406,6 +406,8 @@ which is the source of truth. Never re-import from the .docx, or they will be lo
   refrigerated, so it's frozen the same day, with the duck in separate containers. Both
   are pulled to the reefer to thaw at -2 days, inside the SOP's 24-48 hour thaw. Chef
   added these steps on 2026-10-23, so this is settled.
+- **Macerated Strawberry Sauce:** made and stored at -1 day, not -2 days. The SOP allows
+  only 2 days refrigerated and is best the day it is made. Chef moved it on 2026-10-24.
 
 ## Style rules
 
