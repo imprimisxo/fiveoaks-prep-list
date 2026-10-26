@@ -128,6 +128,11 @@ button, input { font: inherit; }
 .course-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
 .course-head h4 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink); }
 .course-head span { color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+/* Appetizers: one course, split into Duck and Non-duck, one pick from each. */
+.subcourse { display: grid; gap: 8px; padding-left: 12px; border-left: 3px solid var(--band); }
+.subcourse h5 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 15px; letter-spacing: 0.04em; color: var(--brand); }
+.subcourse h5 span { margin-left: 8px; font-family: var(--font-body); font-size: 13px; letter-spacing: 0; color: var(--muted); font-weight: 400; }
+.subcourse .empty-cat { color: var(--muted); font-size: 14px; font-style: italic; }
 .choices { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
 .choice {
   display: grid; grid-template-columns: 1.6em 1fr; gap: 2px 8px; align-content: start;
@@ -354,7 +359,7 @@ details.past .tickets { margin-top: 10px; }
 
   const state = {
     menu: null,
-    items: [],            // dinner services: { id, host, date, guests, salad, meal, dessert }
+    items: [],            // dinner services: { id, host, date, guests, appetizer_duck, appetizer_nonduck, salad, meal, dessert }
     mode: 'loading',      // loading | shared (Claude) | firebase | kitchen (needs the code) | local | error
     readOnly: false,
     formFor: null,        // 'new' or a service id while the guest form is open
@@ -371,13 +376,24 @@ details.past .tickets { margin-top: 10px; }
   const writeQueue = {};
 
   // ---- Menu choices, read from menu.json -----------------------------------
+  // Appetizers are one course with two picks (Chef, 2026-10-25): one Duck and one Non-duck
+  // appetizer per dinner, or none of either. `group` puts both under the Appetizers heading.
   const COURSES = [
+    { field: 'appetizer_duck', label: 'Duck Appetizer', group: 'Duck', category: 'duck', time: 'appetizers', none: 'No duck appetizer' },
+    { field: 'appetizer_nonduck', label: 'Non-duck Appetizer', group: 'Non-duck', category: 'non-duck', time: 'appetizers', none: 'No non-duck appetizer' },
     { field: 'salad', label: 'Salad or Soup', time: 'salad', none: 'No salad or soup' },
     { field: 'meal', label: 'Main Course', time: 'dinner' },
     { field: 'dessert', label: 'Dessert', time: 'dessert', none: 'No dessert' },
   ];
+  const courseOf = (field) => COURSES.find((c) => c.field === field);
   const choicesFor = (field) => {
     const m = state.menu;
+    const c = courseOf(field);
+    if (c && c.category) {
+      return Object.entries(m.appetizers || {}).filter(([, d]) => d.category === c.category)
+        .map(([key, d]) => ({ key, title: d.name, sub: '', comps: d.components, short: d.short }))
+        .sort((a, b) => a.title.localeCompare(b.title));
+    }
     if (field === 'salad') {
       return Object.entries(m.salads_soups).map(([key, d]) => ({ key, num: d.number, title: d.name, sub: '', comps: d.components, short: d.short }));
     }
@@ -468,10 +484,13 @@ details.past .tickets { margin-top: 10px; }
   const sorted = () => [...state.items].sort((a, b) => (a.date || '').localeCompare(b.date || '') || String(a.host).localeCompare(String(b.host)));
   const upcoming = () => sorted().filter((s) => s.date >= todayKey);
   const past = () => sorted().filter((s) => s.date < todayKey).reverse();
-  const isComplete = (s) => s.meal != null && s.salad != null && s.dessert != null;
+  // Every course needs a pick, "none" included. Dinners saved before the appetizer course
+  // have no appetizer fields, so they ask for those picks once.
+  const isComplete = (s) => COURSES.every((c) => s[c.field] != null);
   const included = () => upcoming().filter((s) => !state.excluded.has(s.id));
   const requestFor = (list) => ({
-    services: list.map((s) => ({ date: s.date, host: s.host, guests: s.guests, salad: s.salad, meal: s.meal, dessert: s.dessert })),
+    services: list.map((s) => ({ date: s.date, host: s.host, guests: s.guests, appetizer_duck: s.appetizer_duck,
+      appetizer_nonduck: s.appetizer_nonduck, salad: s.salad, meal: s.meal, dessert: s.dessert })),
     // Chef's standing preference: make the cheesecake and hot fudge once, doubled, on the
     // earliest date, whenever more than one dinner uses them.
     batch: Object.keys(state.menu.components).filter((n) => state.menu.components[n].batch_steps),
@@ -532,7 +551,7 @@ details.past .tickets { margin-top: 10px; }
     const up = upcoming(), old = past();
     const list = up.length
       ? `<ul class="tickets">${up.map((s) => ticket(s, false)).join('')}</ul>`
-      : `<div class="empty"><strong>No upcoming dinners yet</strong><span>Press Add Guest/Date to enter the host, the dinner date and the guest count. Then pick the salad or soup, main course and dessert.</span></div>`;
+      : `<div class="empty"><strong>No upcoming dinners yet</strong><span>Press Add Guest/Date to enter the host, the dinner date and the guest count. Then pick the appetizers, salad or soup, main course and dessert.</span></div>`;
     const oldList = old.length
       ? `<details class="past"><summary>Past dinners (${old.length})</summary><ul class="tickets">${old.map((s) => ticket(s, true)).join('')}</ul></details>`
       : '';
@@ -544,7 +563,7 @@ details.past .tickets { margin-top: 10px; }
     const s = state.items.find((i) => i.id === state.menuFor);
     if (!s || !state.menu) { el.innerHTML = ''; return; }
     const times = state.menu.service_times;
-    const group = (c) => {
+    const choiceButtons = (c) => {
       const cards = choicesFor(c.field).map((ch) => {
         const lead = leadLine(leadOf(ch.comps), s.date);
         const on = String(s[c.field]) === String(ch.key);
@@ -556,18 +575,37 @@ details.past .tickets { margin-top: 10px; }
         </button>`;
       }).join('');
       const none = c.none ? `<button type="button" class="choice none" aria-pressed="${s[c.field] === 'none'}" data-action="pick" data-field="${c.field}" data-value="none" data-key="pick-${c.field}-none"><span class="num" aria-hidden="true"></span><span class="name">${esc(c.none)}</span></button>` : '';
+      return { cards, none };
+    };
+    const group = (c) => {
+      const { cards, none } = choiceButtons(c);
       return `<div class="course" role="group" aria-labelledby="h-${c.field}">
         <div class="course-head"><h4 id="h-${c.field}">${c.label}</h4><span>served ${clock(times[c.time])}</span></div>
         <div class="choices">${cards}${none}</div>
       </div>`;
     };
+    // Duck and Non-duck sit under one Appetizers heading, one pick from each.
+    const appetizerBlock = (list) => `<div class="course" role="group" aria-labelledby="h-appetizers">
+        <div class="course-head"><h4 id="h-appetizers">Appetizers</h4><span>served ${clock(times.appetizers)} &middot; one from each</span></div>
+        ${list.map((c) => {
+          const { cards, none } = choiceButtons(c);
+          const count = choicesFor(c.field).length;
+          return `<div class="subcourse" role="group" aria-labelledby="h-${c.field}">
+            <h5 id="h-${c.field}">${esc(c.group)}<span>${count ? `${count} on the menu` : ''}</span></h5>
+            ${count ? '' : `<p class="empty-cat">None on the menu yet.</p>`}
+            <div class="choices">${cards}${none}</div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    const appCourses = COURSES.filter((c) => c.group);
     const missing = COURSES.filter((c) => s[c.field] == null).map((c) => c.label);
     el.innerHTML = `<section class="panel" aria-labelledby="menuTitle">
       <div class="panel-head">
         <h3 id="menuTitle">Menu for ${esc(s.host)}</h3>
         <p>${esc(longDay(s.date))} &middot; ${esc(s.guests)} guests</p>
       </div>
-      ${COURSES.map(group).join('')}
+      ${appCourses.length ? appetizerBlock(appCourses) : ''}
+      ${COURSES.filter((c) => !c.group).map(group).join('')}
       <div class="actions">
         ${missing.length ? `<span class="hint">Still to pick: ${esc(missing.join(', '))}</span>` : ''}
         <button type="button" class="btn primary" data-action="menu-done" data-key="menu-done">Done</button>
@@ -743,7 +781,7 @@ details.past .tickets { margin-top: 10px; }
     if (firstBad) { $(`#${firstBad}Input`).focus(); return; }
     const id = state.formFor;
     let target = id;
-    if (id === 'new') target = store.add({ host, date, guests, salad: null, meal: null, dessert: null, created: new Date().toISOString() });
+    if (id === 'new') target = store.add({ host, date, guests, appetizer_duck: null, appetizer_nonduck: null, salad: null, meal: null, dessert: null, created: new Date().toISOString() });
     else store.update(id, { host, date, guests });
     state.excluded.delete(target);
     closeForm();

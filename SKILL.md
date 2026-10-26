@@ -43,14 +43,16 @@ say "per SOP"; those SOPs live in `/Users/cheflance/Five_Oaks/SOP/`.
 | `scripts/publish_site.sh` | Pushes the staged web app to the no-login website (GitHub Pages) |
 | `webapp/index.html` | The Prep Planner web app (see "Web app" below) |
 | `webapp/firestore.rules` | The website database's access rules, pasted into the Firebase console |
-| `references/selection_menu.md` | The salad or soup, dinner, and dessert selection menu shown when Chef gives a host and date |
+| `references/selection_menu.md` | The appetizer, salad or soup, dinner, and dessert selection menu shown when Chef gives a host and date |
 | `assets/FiveOaksLogo.png` | Green FIVE OAKS mallard wordmark, 700 x 204 |
 
 ## Step 1: Get the booking
 
-For each dinner you need five things. The dinner runs in three courses: a salad or soup
-at 7:00 PM, the entree at 7:30 PM, and dessert at 8:00 PM. Appetizers are separate, at
-6:00 PM, and none are defined yet.
+For each dinner you need five things, plus the appetizers when Chef names them. The
+dinner runs in three courses: a salad or soup at 7:00 PM, the entree at 7:30 PM, and
+dessert at 8:00 PM. Appetizers come first, at 6:00 PM: one Duck and one Non-duck
+appetizer per dinner, or none of either (Chef, 2026-10-25). The keys are in `menu.json`
+under `appetizers`; the web app and the chat selection menu show them as buttons.
 
 | Field | Notes |
 |---|---|
@@ -105,6 +107,9 @@ from the booking. In this shape, angle brackets mark values to fill in:
 
 Optional fields:
 
+- `appetizer_duck` and `appetizer_nonduck` on a service: one key from `menu.json`
+  `appetizers` each (its short or full name works too), or `none`. The dish must belong to
+  that category, or the run stops. Leave them out when the dinner has no appetizers.
 - `label` names the group. It goes in the filename and footer. Leave it out when each
   night is a different party.
 - `host` on a service is that night's party name, as the reservation gives it. It prints
@@ -175,7 +180,9 @@ These are the rules the generator applies. Know them so you can explain a sheet 
 - **Course times** come from `service_times` in `menu.json`: appetizers 6:00 PM, salad or
   soup 7:00 PM, dinner (entrees) 7:30 PM, dessert 8:00 PM. Each component keys off its own
   `course`. The course-times line under "Tonight" lists only the courses that have prep
-  that night, so Appetizers stays off it until Chef defines appetizer items.
+  that night, so Appetizers shows only on nights with an appetizer picked. The picked
+  appetizers lead the menu label ("Arancini + Spinach Dip + Duck Gumbo + ..."), so the
+  Tonight line and the bands can wrap; the one-page height estimate counts those wraps.
 - **One sheet per day that has work.** A day with nothing due gets no sheet. Each sheet
   starts on a new page with the logo, so one day can be pulled off the packet and posted.
 - **Overlapping nights share a sheet.** On the Friday of a Fri-Sun stay, the sheet carries
@@ -293,9 +300,11 @@ was slow. The artifact still works.
 
 - **Flow:** the Five Oaks logo at the top, then an **Add Guest/Date** button. It opens a
   form for Host (the host sponsor), Dinner Date, and Number of Guests, with an **Add Dinner
-  Service** button. That button saves the dinner and shows the menu selection: Salad or
+  Service** button. That button saves the dinner and shows the menu selection: Appetizers
+  (a Duck group and a Non-duck group, one pick or "No ... appetizer" in each), Salad or
   Soup, Main Course (the entree), and Dessert. Each choice card shows how far ahead its
-  prep starts and flags it when the dinner is too close.
+  prep starts and flags it when the dinner is too close. Dinners saved before 2026-10-25
+  have no appetizer picks, so their menus ask for those once before the prep list builds.
 - **Prep List** (Chef's change, 2026-10-23): a calendar field picks the prep day
   (today by default, no past days) and chips list every day that has prep. Pressing
   **Prep List** shows that day's task counts and two buttons. **View Prep List** shows
@@ -329,8 +338,11 @@ was slow. The artifact still works.
   and `.nojekyll`. Never edit it directly. `webapp/firebase-config.json` is the Firebase
   web config. It is public by design: it only tells browsers where the database is.
 - **Dinner fields**, the same in both stores, one document per dinner: `host`, `date`
-  (YYYY-MM-DD), `guests`, `salad` (key or `none`), `meal` (`"1"` to `"5"`), `dessert`
-  (key or `none`), `created`. A course that is still `null` hasn't been picked. When Chef
+  (YYYY-MM-DD), `guests`, `appetizer_duck` and `appetizer_nonduck` (key or `none`),
+  `salad` (key or `none`), `meal` (`"1"` to `"5"`), `dessert` (key or `none`), `created`.
+  A course that is still `null` (or missing) hasn't been picked. `firestore.rules` allows
+  the two appetizer fields since 2026-10-25; paste the rules into the Firebase console
+  before the website takes appetizer picks, or Firestore refuses them. When Chef
   wants the PDF of artifact dinners, read them with ArtifactData `list` on the artifact
   URL. Website dinners are out of Claude's reach unless Chef shares his kitchen code, so
   ask him for the dinners instead. Then run them through Steps 2 to 5.
@@ -361,9 +373,12 @@ All menu edits go in `data/menu.json`. The script needs no changes.
   `desserts` with `name`, a `short` name for headers, and its `components` in plating
   order. Meal keys are numbers. Salad, soup, and dessert keys are lowercase with hyphens.
   Then add its card to `references/selection_menu.md` with the same key.
-- **Appetizers:** none are defined yet. When Chef adds them, give each component
-  `"course": "appetizers"`, which keys off 6:00 PM. Attach them per night with `extras`, or
-  add an `appetizers` map with a matching request field if they become a fixed menu choice.
+- **Appetizers:** the `appetizers` map (Chef, 2026-10-25) holds 24 dishes, each with a
+  `category` (`duck` or `non-duck`), `name`, `short`, and `components`. Each component has
+  `"course": "appetizers"`, which keys off 6:00 PM, and its tasks come from the dish's html
+  SOP in `/Users/cheflance/Five_Oaks/SOP`. To add a Non-duck appetizer, add its component
+  and an entry with `"category": "non-duck"`; the web app lists it under Non-duck on its
+  own. Keep each `short` unique: the request can name a dish by it.
 - **Salads & Soups:** a menu section (`salads_soups`) like desserts, one choice per
   dinner, picked with the request's `salad` field. It's part of the dinner, not an
   appetizer. Each entry carries Chef's `number` (1-4) besides its key. Their components
@@ -432,6 +447,10 @@ which is the source of truth. Never re-import from the .docx, or they will be lo
     The Chef Jamie's SOP raspberry coulis, fresh raspberries, and zest over the slice are
     left off. The strawberry sauce always gets the SOP's optional lemon zest, so its task
     reads "make the SOP, including the lemon zest."
+  - **Appetizer course** (added the same day): 23 Duck appetizers and one Non-duck (3
+    Cheese Spinach Dip), one of each per dinner. Their prep lists carry Chef's calls: pizza
+    and flatbread toppings at -2 days, spinach dip made at -3 days, prosciutto started at
+    -21 days.
   - **House Bacon Salad:** unchanged on purpose. Chef keeps tempering the spinach at -1 hour,
     boiling the eggs 10 minutes, and cooking the eggs and bacon on service day, although the
     SOP differs on all three. He'll adjust from experience. Don't flag it.

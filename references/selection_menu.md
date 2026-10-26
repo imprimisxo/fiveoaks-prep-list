@@ -1,10 +1,12 @@
-# Salad or soup, dinner, and dessert selection menu
+# Appetizer, salad or soup, dinner, and dessert selection menu
 
 Chef asked for this on 2026-10-22. When he enters a host name and a dinner date, show
 him a **single-selection menu of the dinners** and a **separate single-selection menu
 of the desserts**, rather than asking in prose. On 2026-10-23 he added a third menu,
-**Salads & Soups**. It's part of the dinner and served at 7:00 PM, so it comes first in
-course order. Appetizers are separate and have no menu here.
+**Salads & Soups**. It's part of the dinner and served at 7:00 PM. On 2026-10-25 he
+added **Appetizers** at 6:00 PM as two single-selection menus, **Duck** and
+**Non-duck**: one of each per dinner, or none of either, the same as the web app. In
+course order the appetizers come first, then salad or soup, entree, and dessert.
 
 ## How to show it
 
@@ -12,29 +14,35 @@ course order. Appetizers are separate and have no menu here.
    conversation. It is silent setup, so don't mention it.
 2. Call `show_widget` with the HTML below, filled in for the booking.
 3. The answers come back as one line, for example
-   `Dinner details — <Host> salad: <key> · <Host> dinner: <1-5> · <Host> dessert: <key> · <Host> guests: <count>`.
-   Map `salad` to the request's `salad`, `dinner` to `meal`, and `dessert` to `dessert`.
-   `none` means that course is skipped. Then continue at Step 2 of SKILL.md.
+   `Dinner details — <Host> duck_app: <key> · <Host> nonduck_app: <key> · <Host> salad: <key> · <Host> dinner: <1-5> · <Host> dessert: <key> · <Host> guests: <count>`.
+   Map `duck_app` to the request's `appetizer_duck`, `nonduck_app` to `appetizer_nonduck`,
+   `salad` to `salad`, `dinner` to `meal`, and `dessert` to `dessert`. `none` means that
+   course is skipped. Then continue at Step 2 of SKILL.md.
 
 Fill-in rules:
 
 - Replace `HOST` with the host's name and `DATE` with the dinner date written like
   `Fri, Nov 20`. Keep `host_` in each `data-name` as the host's name in lowercase with
   underscores, for example `jones_dinner`, so each answer comes back labeled by host.
+  The first group in each set names HOST and DATE; when you drop a group that carries
+  them, move "is HOST having on DATE" to the next group shown.
 - **Several bookings in one message:** put one set of groups per booking inside the same
-  form. Each set has salad or soup, dinner, dessert, and guests if they're missing. Keep
-  them in date order, so Chef answers every night in one pass.
+  form. Each set has the duck appetizer, non-duck appetizer, salad or soup, dinner,
+  dessert, and guests if they're missing. Keep them in date order, so Chef answers every
+  night in one pass.
 - **Drop the guests group** when the guest count was already given. Drop any course group
   whose choice was already given. If everything is known, skip the form entirely.
 - Keep the options in sync with `data/menu.json`. When Chef adds a salad, soup, meal, or
   dessert there, add its card here with the same `data-value`: the `salads_soups` key,
   the meal number, or the dessert key. Use the `ti-salad` icon for a salad and `ti-soup`
-  for a soup.
+  for a soup. When he adds an appetizer, add a pill to its group (`category` `duck` or
+  `non-duck`) with the `appetizers` key as its `data-value`, in alphabetical order. The
+  appetizer groups use plain pills, not cards: the Duck group has 23 dishes.
 
 If `show_widget` is not available in the session, fall back to a numbered menu in plain
-text, dinners first and desserts second, and ask Chef to reply with the two numbers.
-Don't use the multiple-choice question tool: it caps a question at 4 options, and there
-are 5 dinners.
+text, in course order (duck appetizers, non-duck appetizers, salads and soups, dinners,
+desserts), and ask Chef to reply with one number per menu. Don't use the multiple-choice
+question tool: it caps a question at 4 options, and there are 23 duck appetizers.
 
 ## Template (one booking)
 
@@ -46,7 +54,43 @@ are 5 dinners.
   </div>
   <div class="elicit-body">
     <div class="elicit-group">
-      <label class="elicit-question">Which salad or soup is HOST having on DATE?</label>
+      <label class="elicit-question">Which duck appetizer is HOST having on DATE? (6:00 PM, one)</label>
+      <div class="elicit-pills" data-name="host_duck_app" data-multi="false">
+        <button type="button" class="elicit-pill" data-value="asian-grilled-duck">Asian Grilled Duck</button>
+        <button type="button" class="elicit-pill" data-value="bbq-duck-breast">BBQ Duck Breast</button>
+        <button type="button" class="elicit-pill" data-value="duck-and-bacon-wonton-tacos">Duck and Bacon Wonton Tacos</button>
+        <button type="button" class="elicit-pill" data-value="duck-and-cheese-wontons">Duck and Cheese Wontons</button>
+        <button type="button" class="elicit-pill" data-value="duck-and-mushroom-flatbread">Duck and Mushroom Flatbread</button>
+        <button type="button" class="elicit-pill" data-value="duck-arancini">Duck Arancini</button>
+        <button type="button" class="elicit-pill" data-value="duck-asian-egg-rolls">Duck Asian Egg Rolls</button>
+        <button type="button" class="elicit-pill" data-value="duck-beignets">Duck Beignets</button>
+        <button type="button" class="elicit-pill" data-value="duck-carpaccio">Duck Carpaccio</button>
+        <button type="button" class="elicit-pill" data-value="duck-confit-crab-cakes">Duck Confit Crab Cakes</button>
+        <button type="button" class="elicit-pill" data-value="duck-confit-cream-cheese-dip">Duck Confit Cream Cheese Dip</button>
+        <button type="button" class="elicit-pill" data-value="duck-confit-pizza">Duck Confit Pizza</button>
+        <button type="button" class="elicit-pill" data-value="duck-confit-waffles">Duck Confit Waffles</button>
+        <button type="button" class="elicit-pill" data-value="duck-empanadas">Duck Empanadas</button>
+        <button type="button" class="elicit-pill" data-value="duck-nachos-three-ways">Duck Nachos, Three Ways</button>
+        <button type="button" class="elicit-pill" data-value="duck-prosciutto">Duck Prosciutto (21 days)</button>
+        <button type="button" class="elicit-pill" data-value="duck-roll-ups">Duck Roll Ups</button>
+        <button type="button" class="elicit-pill" data-value="duck-southwest-egg-rolls">Duck Southwest Egg Rolls</button>
+        <button type="button" class="elicit-pill" data-value="duck-tamales">Duck Tamales</button>
+        <button type="button" class="elicit-pill" data-value="duck-tender-pow-pow">Duck Tender Pow Pow</button>
+        <button type="button" class="elicit-pill" data-value="duck-wings-three-sauces">Duck Wings, Three Sauces</button>
+        <button type="button" class="elicit-pill" data-value="fried-duck-tenders">Fried Duck Tenders</button>
+        <button type="button" class="elicit-pill" data-value="smoked-duck-breast">Smoked Duck Breast</button>
+        <button type="button" class="elicit-pill" data-value="none">No duck appetizer</button>
+      </div>
+    </div>
+    <div class="elicit-group">
+      <label class="elicit-question">Which non-duck appetizer? (one)</label>
+      <div class="elicit-pills" data-name="host_nonduck_app" data-multi="false">
+        <button type="button" class="elicit-pill" data-value="three-cheese-spinach-dip">3 Cheese Spinach Dip</button>
+        <button type="button" class="elicit-pill" data-value="none">No non-duck appetizer</button>
+      </div>
+    </div>
+    <div class="elicit-group">
+      <label class="elicit-question">Which salad or soup?</label>
       <div class="elicit-pills" data-name="host_salad" data-multi="false">
         <button type="button" class="elicit-pill" data-value="ranch-salad" style="border-radius:12px; padding:14px 16px; display:flex; gap:12px; align-items:flex-start; text-align:left; min-width:220px; box-shadow:0 1px 2px rgba(0,0,0,0.04)"><i class="ti ti-salad" style="font-size:20px" aria-hidden="true"></i><span><span style="font-size:13px; font-weight:500">1. Five Oaks Ranch Salad</span><br><span style="font-size:11px; color:var(--text-muted)">House ranch, croutons</span></span></button>
         <button type="button" class="elicit-pill" data-value="bacon-salad" style="border-radius:12px; padding:14px 16px; display:flex; gap:12px; align-items:flex-start; text-align:left; min-width:220px; box-shadow:0 1px 2px rgba(0,0,0,0.04)"><i class="ti ti-salad" style="font-size:20px" aria-hidden="true"></i><span><span style="font-size:13px; font-weight:500">2. House Bacon Salad</span><br><span style="font-size:11px; color:var(--text-muted)">Spinach, egg, warm bacon dressing</span></span></button>

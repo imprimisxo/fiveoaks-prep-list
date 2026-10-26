@@ -7,7 +7,7 @@ service cloud.firestore {
     match /kitchens/{kitchen}/services/{dinner} {
       allow read, delete: if kitchen.size() == 64;
       allow create, update: if kitchen.size() == 64
-        && request.resource.data.keys().hasOnly(['host', 'date', 'guests', 'salad', 'meal', 'dessert', 'created'])
+        && request.resource.data.keys().hasOnly(['host', 'date', 'guests', 'appetizer_duck', 'appetizer_nonduck', 'salad', 'meal', 'dessert', 'created'])
         && request.resource.data.host is string && request.resource.data.host.size() <= 80
         && request.resource.data.date is string && request.resource.data.date.size() == 10
         && request.resource.data.guests is number && request.resource.data.guests > 0 && request.resource.data.guests <= 500;

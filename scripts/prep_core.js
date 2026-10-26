@@ -153,8 +153,8 @@ function build({ menu: MENU, request: REQ, docx, logo: logoBuffer, fonts = {}, o
 
   if (!Array.isArray(REQ.services) || REQ.services.length === 0) fail('request has no services');
 
-  // Salads & Soups and Desserts are keyed choices: a menu.json key, its short or full name,
-  // its Chef number when it has one ("2", "#2"), or 'none'.
+  // Appetizers, Salads & Soups and Desserts are keyed choices: a menu.json key, its short or
+  // full name, its Chef number when it has one ("2", "#2"), or 'none'.
   const findChoice = (section, what, key) => {
     if (key == null || key === '' || key === 'none') return null;
     const k = String(key).toLowerCase().trim();
@@ -170,6 +170,12 @@ function build({ menu: MENU, request: REQ, docx, logo: logoBuffer, fonts = {}, o
     if (ymd(date) < todayStr) fail(`service ${s.date} is before today (${todayStr}). Set "today" in the request to backdate.`);
     const meal = s.meal == null ? null : MENU.meals[String(s.meal).replace(/^#/, '')];
     if (s.meal != null && !meal) fail(`unknown meal "${s.meal}". Known: ${Object.keys(MENU.meals).join(', ')}`);
+    // Chef's rule (2026-10-25): one Duck and one Non-duck appetizer per dinner, or none.
+    const appetizers = [['appetizer_duck', 'duck'], ['appetizer_nonduck', 'non-duck']].map(([field, category]) => {
+      const a = findChoice('appetizers', `${category} appetizer`, s[field]);
+      if (a && a.category !== category) fail(`service ${s.date}: "${s[field]}" is not a ${category} appetizer`);
+      return a;
+    }).filter(Boolean);
     const salad = findChoice('salads_soups', 'salad or soup', s.salad);
     const dessert = findChoice('desserts', 'dessert', s.dessert);
     const guests = s.guests == null ? null : Number(s.guests);
@@ -178,6 +184,7 @@ function build({ menu: MENU, request: REQ, docx, logo: logoBuffer, fonts = {}, o
     for (const [course, t] of Object.entries(s.times || {})) times[course] = parseClock(t);
     // Course order. A Set, because older requests attached the gumbo through `extras`.
     const componentNames = [...new Set([
+      ...appetizers.flatMap(a => a.components),
       ...(salad ? salad.components : []),
       ...(meal ? meal.components : []),
       ...(dessert ? dessert.components : []),
@@ -185,15 +192,20 @@ function build({ menu: MENU, request: REQ, docx, logo: logoBuffer, fonts = {}, o
     ])];
     for (const c of componentNames) if (!MENU.components[c]) fail(`service ${s.date}: unknown component "${c}"`);
     const mealLabel = meal ? `Meal #${String(s.meal).replace(/^#/, '')}: ${meal.short}` : null;
-    const menuLabel = [salad ? salad.short : null, mealLabel, dessert ? dessert.short : null].filter(Boolean).join(' + ') || 'Extras only';
+    const menuLabel = [...appetizers.map(a => a.short), salad ? salad.short : null, mealLabel, dessert ? dessert.short : null]
+      .filter(Boolean).join(' + ') || 'Extras only';
     const host = s.host ? String(s.host).trim() : null;
-    return { i, date, key: ymd(date), host, guests, salad, meal, dessert, times, componentNames, menuLabel };
+    return { i, date, key: ymd(date), host, guests, appetizers, salad, meal, dessert, times, componentNames, menuLabel };
   }).sort((a, b) => a.date - b.date || a.i - b.i);
 
   const guestText = (s) => s.guests ? `${s.guests} guests` : 'guest count TBD';
   const serviceTag = (s) => `${shortDate(s.date)} dinner`;
   // With back-to-back parties, the host name is how the kitchen tells the nights apart.
   const hostTag = (s) => s.host ? ` | ${s.host}` : '';
+  // The "Tonight" line and the service band, shared by the sheet and its height estimate:
+  // with appetizers in the menu label, either can now wrap.
+  const tonightText = (s) => `${s.host ? s.host + '   |   ' : ''}${s.menuLabel}   |   ${guestText(s)}`;
+  const bandText = (svc) => [`For ${serviceTag(svc)}${hostTag(svc)}`, `   ${svc.menuLabel}   |   ${guestText(svc)}`];
 
   // ---- Batching ---------------------------------------------------------------
   // "batch": ["Classic Cheesecake"] in the request makes one production run of that
@@ -378,8 +390,8 @@ function build({ menu: MENU, request: REQ, docx, logo: logoBuffer, fonts = {}, o
       shading: { type: ShadingType.CLEAR, fill: TAN_TINT, color: 'auto' },
       margins: CELL_M(),
       children: [new Paragraph({ spacing: CELL_LINE(), children: [
-        run(`For ${serviceTag(svc)}${hostTag(svc)}`, { bold: true, color: GREEN }),
-        run(`   ${svc.menuLabel}   |   ${guestText(svc)}`),
+        run(bandText(svc)[0], { bold: true, color: GREEN }),
+        run(bandText(svc)[1]),
       ] })],
     })],
   });
@@ -447,10 +459,10 @@ function build({ menu: MENU, request: REQ, docx, logo: logoBuffer, fonts = {}, o
       sheet.tonight.forEach((s, k) => {
         out.push(headerLine([
           run('Tonight: ', { bold: true, color: GREEN }),
-          run(`${s.host ? s.host + '   |   ' : ''}${s.menuLabel}   |   ${guestText(s)}`, { bold: true }),
+          run(tonightText(s), { bold: true }),
         ], false));
-        // A course shows only on nights that have something to prep for it. Appetizers have
-        // no components yet, and listing them anyway pushed the sign-off off the line.
+        // A course shows only on nights that have something to prep for it. Listing empty
+        // courses anyway pushed the sign-off off the line.
         const served = new Set(s.componentNames.map(n => MENU.components[n].course));
         const courses = [['Appetizers', 'appetizers'], ['Salad or Soup', 'salad'], ['Dinner', 'dinner'], ['Dessert', 'dessert']]
           .filter(([, c]) => s.times[c] != null && served.has(c))
@@ -521,10 +533,12 @@ function build({ menu: MENU, request: REQ, docx, logo: logoBuffer, fonts = {}, o
     const textLine = d.sz / 2 * 1.3 + 1.5;
     const h2Pt = d.h2 / 2 * 1.35 + 8.5;
     const rowsPt = (cols, cells) => rowPt(Math.max(...cells.map((t, i) => wrapLines(t, cols[i + 1], d))));
-    let h = 39 + 36 + (sheet.tonight.length ? 2 * sheet.tonight.length : 1) * textLine + 2;
+    // Each dinner tonight takes its "Tonight" line (which can wrap) plus the course line.
+    const tonightLines = sheet.tonight.reduce((n, s) => n + wrapLines(`Tonight: ${tonightText(s)}`, W, d) + 1, 0);
+    let h = 39 + 36 + (sheet.tonight.length ? tonightLines : 1) * textLine + 2;
     const grouped = (groups, cols, cellsOf) => {
       let t = rowPt(1);
-      for (const [, list] of groups) { t += rowPt(1); for (const r of list) t += rowsPt(cols, cellsOf(r)); }
+      for (const [svc, list] of groups) { t += rowPt(wrapLines(bandText(svc).join(''), W, d)); for (const r of list) t += rowsPt(cols, cellsOf(r)); }
       return t;
     };
     if (sheet.pastDue.length) h += h2Pt + textLine + 3 + grouped(sheet.pastDue, PAST_COLS, r => [shortDate(r.dueDate), r.component, r.text]);

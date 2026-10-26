@@ -9,6 +9,34 @@
   },
   "_service_times_note": "Chef's times (2026-10-22): appetizers 6 PM, salad or soup 7 PM, entrees 7:30 PM, dessert 8 PM. Entrees were 7 PM and dessert 7:30 PM until the Salad or Soup course was added.",
 
+  "_appetizers_note": "Chef's appetizer course of 2026-10-25, served at 6 PM (course 'appetizers'). Each dinner takes one Duck and one Non-duck appetizer, or none of either (request fields appetizer_duck and appetizer_nonduck). Every task comes from the dish's html SOP in /Users/cheflance/Five_Oaks/SOP (reports/SOP Prep Activities by Dish.md in the Five Oaks workspace), with Chef's 10/25 calls: pizza and flatbread toppings at -2 days, spinach dip made at -3 days, prosciutto started at -21 days. Non-duck appetizers will be added later.",
+  "appetizers": {
+    "asian-grilled-duck": { "category": "duck", "name": "Asian Grilled Duck", "short": "Asian Grilled Duck", "components": ["Asian Grilled Duck"] },
+    "bbq-duck-breast": { "category": "duck", "name": "BBQ Duck Breast", "short": "BBQ Duck", "components": ["BBQ Duck Breast"] },
+    "duck-and-bacon-wonton-tacos": { "category": "duck", "name": "Duck and Bacon Wonton Tacos", "short": "Wonton Tacos", "components": ["Duck and Bacon Wonton Tacos"] },
+    "duck-and-cheese-wontons": { "category": "duck", "name": "Duck and Cheese Wontons", "short": "Cheese Wontons", "components": ["Duck and Cheese Wontons"] },
+    "duck-and-mushroom-flatbread": { "category": "duck", "name": "Duck and Mushroom Flatbread", "short": "Mushroom Flatbread", "components": ["Duck and Mushroom Flatbread"] },
+    "duck-arancini": { "category": "duck", "name": "Duck Arancini", "short": "Arancini", "components": ["Duck Arancini"] },
+    "duck-asian-egg-rolls": { "category": "duck", "name": "Duck Asian Egg Rolls", "short": "Asian Egg Rolls", "components": ["Duck Asian Egg Rolls"] },
+    "duck-beignets": { "category": "duck", "name": "Duck Beignets", "short": "Beignets", "components": ["Duck Beignets"] },
+    "duck-carpaccio": { "category": "duck", "name": "Duck Carpaccio", "short": "Carpaccio", "components": ["Duck Carpaccio"] },
+    "duck-confit-crab-cakes": { "category": "duck", "name": "Duck Confit Crab Cakes", "short": "Crab Cakes", "components": ["Duck Confit Crab Cakes"] },
+    "duck-confit-cream-cheese-dip": { "category": "duck", "name": "Duck Confit Cream Cheese Dip", "short": "Confit Dip", "components": ["Duck Confit Cream Cheese Dip"] },
+    "duck-confit-pizza": { "category": "duck", "name": "Duck Confit Pizza", "short": "Confit Pizza", "components": ["Duck Confit Pizza"] },
+    "duck-confit-waffles": { "category": "duck", "name": "Duck Confit Waffles", "short": "Confit Waffles", "components": ["Duck Confit Waffles"] },
+    "duck-empanadas": { "category": "duck", "name": "Duck Empanadas", "short": "Empanadas", "components": ["Duck Empanadas"] },
+    "duck-nachos-three-ways": { "category": "duck", "name": "Duck Nachos, Three Ways", "short": "Nachos", "components": ["Duck Nachos, Three Ways"] },
+    "duck-prosciutto": { "category": "duck", "name": "Duck Prosciutto", "short": "Prosciutto", "components": ["Duck Prosciutto"] },
+    "duck-roll-ups": { "category": "duck", "name": "Duck Roll Ups", "short": "Roll Ups", "components": ["Duck Roll Ups"] },
+    "duck-southwest-egg-rolls": { "category": "duck", "name": "Duck Southwest Egg Rolls", "short": "Southwest Egg Rolls", "components": ["Duck Southwest Egg Rolls"] },
+    "duck-tamales": { "category": "duck", "name": "Duck Tamales", "short": "Tamales", "components": ["Duck Tamales"] },
+    "duck-tender-pow-pow": { "category": "duck", "name": "Duck Tender Pow Pow", "short": "Pow Pow", "components": ["Duck Tender Pow Pow"] },
+    "duck-wings-three-sauces": { "category": "duck", "name": "Duck Wings, Three Sauces", "short": "Duck Wings", "components": ["Duck Wings, Three Sauces"] },
+    "fried-duck-tenders": { "category": "duck", "name": "Fried Duck Tenders", "short": "Duck Tenders", "components": ["Fried Duck Tenders"] },
+    "smoked-duck-breast": { "category": "duck", "name": "Smoked Duck Breast", "short": "Smoked Duck", "components": ["Smoked Duck Breast"] },
+    "three-cheese-spinach-dip": { "category": "non-duck", "name": "3 Cheese Spinach Dip", "short": "Spinach Dip", "components": ["3 Cheese Spinach Dip"] }
+  },
+
   "_salads_soups_note": "Salads & Soups is part of the dinner, one choice per night, served at 7 PM (course 'salad'). Appetizers are separate. Chef's list of 2026-10-23, numbered as he numbered it. That list replaced the SOP-derived gumbo tasks of 2026-10-22.",
   "salads_soups": {
     "ranch-salad": {
@@ -89,6 +117,302 @@
   },
 
   "components": {
+    "Asian Grilled Duck": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, thaw duck breasts in reefer",
+        "-1 days, trim duck (skin and fat to Base C), cut 21 g pieces, 2 per skewer, hold covered in reefer",
+        "-1 days, make the glaze per SOP, split into grill glaze and finish glaze, cool and store",
+        "-1 days, toast and grind Szechuan pepper; toast sesame seeds",
+        "-6 1/2 hours, mix the marinade, marinate duck exactly 4 hours, turn at 2 hours",
+        "-3 hours, soak skewers 30 minutes",
+        "-2 1/2 hours, drain and discard marinade, pat duck dry",
+        "-1 1/2 hours, thread skewers, group into waves 13/13/12/12, hold in reefer",
+        "-1 1/4 hours, light two-zone grill; reheat both glazes to 165°F; preheat hold pans with finish glaze at 140°F; slice scallions, pick cilantro, cut limes",
+        "-30 minutes, grill Wave 1, glaze on the cool zone, pull at 140°F, hold up to 30 minutes",
+        "0 hours, flash, final glaze, garnish, and pass each tray"
+      ]
+    },
+    "BBQ Duck Breast": {
+      "course": "appetizers",
+      "tasks": [
+        "-3 days, thaw duck breasts sealed in reefer",
+        "-1 days, make half-batch blackberry BBQ sauce per SOP, cool and store",
+        "-1 days, trim and score duck breasts, rack skin up uncovered in reefer",
+        "-1 days, grill 55 baguette rounds brushed with Base C fat, store airtight; have pickled red onion ready",
+        "-4 hours, season duck (salt on skin, rub on meat side), rest 30 minutes at room temp",
+        "-3 1/2 hours, cold-pan render duck per SOP, pull at 130°F, rest 10 minutes, chill uncovered; strain fat into Base C",
+        "-2 hours, mince chives; drain and sliver pickled onion",
+        "-45 minutes, warm sauce to 135°F, brush whole breasts",
+        "-30 minutes, slice duck cold, 6-7 pieces per breast, temper 15-20 minutes",
+        "0 hours, build and pass trays of 10"
+      ]
+    },
+    "Duck and Bacon Wonton Tacos": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, move 1 Base A confit pack to reefer to thaw",
+        "-1 days, make cherry-hoisin glaze; chop confit; render bacon lardons",
+        "-1 days, make scallion-lime crème; cut slaw vegetables except the pear",
+        "-4 hours, fry 20 wonton shells over a dowel, salt, store airtight",
+        "-45 minutes, cut the pear and dress the slaw; set glaze bottle out",
+        "-30 minutes, finish duck and bacon filling per SOP to 165°F, hold uncovered at 200°F",
+        "0 hours, build and pass one tray at a time"
+      ]
+    },
+    "Duck and Cheese Wontons": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, move Base A confit (1 pack plus 113 g) and wonton skins to reefer to thaw",
+        "-1 days, make filling per SOP, chill 1 hour, fold 50 wontons, freeze 1 hour, bag 10 per bag",
+        "-1 days, bias-slice garnish scallions",
+        "-30 minutes, heat fryer to 340°F; fry a test wonton, check 165°F",
+        "-15 minutes, fry 10 from frozen, 5 minutes; rest 2 minutes",
+        "0 hours, tray 10 around plum sauce with scallions and pass; fry in waves"
+      ]
+    },
+    "Duck and Mushroom Flatbread": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, clean, tear, and roast mushrooms per SOP, deglaze with sherry vinegar, cool uncovered, refrigerate",
+        "-2 days, caramelize shallot; whip goat cheese and load piping bag; refrigerate",
+        "-3 hours, set out lamination duck fat to soften; mix dough, bulk ferment 1 1/2 hours",
+        "-2 3/4 hours, crisp confit; beat goat cheese smooth again; portion fontina; strip thyme; pick arugula",
+        "-1 1/4 hours, divide and laminate dough, rest 20 minutes, pan, proof 30 minutes; preheat oven to 475°F; make garlic duck fat",
+        "-15 minutes, build and bake first pan 10-12 minutes; goat cheese dots and thyme, rest 3 minutes, cut 32",
+        "0 hours, arugula at the pass and pass; bake pans in waves"
+      ]
+    },
+    "Duck Arancini": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, move Base A confit (1 pack plus 225 g) to reefer to thaw",
+        "-2 days, soak porcini; cook risotto per SOP; spread on oiled sheet pans, cool, chill overnight",
+        "-1 days, mix confit into risotto; form 42.5 g balls around mozzarella cubes; chill 1 hour",
+        "-1 days, bread arancini, set 30 minutes, freeze 2 hours, bag 10 per bag",
+        "-1 days, make truffle aioli, load piping bag",
+        "-30 minutes, heat fryer to 335°F; fry a test ball, check 165°F center",
+        "-25 minutes, fry 10 from frozen, 7 minutes; rest 3 minutes; hold at 200°F up to 25 minutes",
+        "0 hours, aioli dots and pass each tray; fry the next 10 as each tray goes out"
+      ]
+    },
+    "Duck Asian Egg Rolls": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, move 3 Base A confit packs and egg roll wrappers to reefer to thaw",
+        "-1 days, prep vegetables, cook filling per SOP, cool to 41°F",
+        "-1 days, squeeze filling, reduce the liquid to syrup and fold back, add cornstarch",
+        "-1 days, portion 57 g logs, roll 40 egg rolls, freeze 2 hours, bag 10 per bag",
+        "-30 minutes, heat fryer to 340°F; fry a test roll, check 165°F center",
+        "-20 minutes, fry 8 at a time from frozen, 7 minutes; rest 2 minutes; cut on the bias",
+        "0 hours, tray 20 halves around plum sauce with sesame seeds and pass; fry in waves"
+      ]
+    },
+    "Duck Beignets": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, move 1 Base A confit pack to reefer to thaw",
+        "-1 days, crisp confit; grate Parmigiano; mince chives; combine add-ins",
+        "-1 days, make whole grain mustard aioli",
+        "-1 days, make choux paste per SOP within 24 hours of the first drop, fold in add-ins, surface-wrap, refrigerate",
+        "-45 minutes, pull choux to temper; heat fryer to 350°F",
+        "-15 minutes, fry a test drop of 2, then drops of 9; finish with Parmigiano and flake salt; hold at 200°F up to 20 minutes",
+        "0 hours, fill cones of 3 at the pass, 3 cones and an aioli ramekin per tray"
+      ]
+    },
+    "Duck Carpaccio": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, trim 2 duck breasts, cure 12 hours overnight (never past 14)",
+        "-1 days, rinse, dry 2 hours, sear 45 seconds per side, ice bath, roll cylinders, vacuum seal",
+        "-1 days, bake crostini; make lemon-Dijon vinaigrette",
+        "-8 hours, move cylinders to freezer to firm to a 10-15°F core",
+        "-4 hours, sanitize slicer, slice duck 1/16 in onto chilled pans, wrap, label slice time",
+        "-1 hours, fry capers; shave Parmigiano; pick arugula",
+        "0 hours, dress and pass each tray as it goes out"
+      ]
+    },
+    "Duck Confit Crab Cakes": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, move Base A confit (1 pack plus 225 g) to reefer to thaw",
+        "-1 days, pick crab; chop confit; mix per SOP; chill 2 hours",
+        "-1 days, form 50 g cakes, chill 1 hour, bread, set 30 minutes, freeze, bag",
+        "-1 days, make Meyer lemon aioli, load piping bag",
+        "-1 hours, mince chives for garnish",
+        "-30 minutes, heat fryer to 340°F; fry a test cake, check 165°F",
+        "-20 minutes, fry 10 from frozen, 6 minutes; hold at 200°F up to 30 minutes",
+        "0 hours, aioli dot and chive, pass each tray; fry the next 10 as each tray goes out"
+      ]
+    },
+    "Duck Confit Cream Cheese Dip": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, move 2 Base A confit packs to reefer to thaw",
+        "-1 days, caramelize onion per SOP, cool, chop",
+        "-1 days, toast and chop walnuts; loosen sour cherry preserves with sherry vinegar",
+        "-1 days, crisp confit, mix dip per SOP, pan 3 half pans 3/4 in deep, plastic and lid, refrigerate",
+        "-6 hours, grill bias-cut baguette slices; separate and rinse endive",
+        "-4 hours, mince chives",
+        "-45 minutes, bake first pan uncovered at 350°F to 165°F center (25-35 minutes)",
+        "-10 minutes, finish pan with cherry, chives, and walnuts; set in chafer at 150°F",
+        "0 hours, serve with dippers; next pan in when the first is half gone; discard pans at 3 hours"
+      ]
+    },
+    "Duck Confit Pizza": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, caramelize onion per SOP, cool, split into 2 pan portions, refrigerate",
+        "-3 hours, mix dough, bulk ferment 1 1/2 hours",
+        "-2 3/4 hours, crisp confit; reduce balsamic glaze; portion cheese blend; fill fig jam bag; strip thyme",
+        "-1 1/4 hours, divide and round dough, rest 20 minutes, pan, proof 30 minutes; preheat oven to 475°F; make garlic duck fat",
+        "-15 minutes, build and bake first pan 10-12 minutes; finish, rest 3 minutes, cut 32",
+        "0 hours, pass; bake pans in waves so no square waits over 15 minutes"
+      ]
+    },
+    "Duck Confit Waffles": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, move Base A confit (2 packs plus 225 g) to reefer to thaw",
+        "-1 days, sift dry mix; make hot honey; fry sage leaves",
+        "-4 hours, whisk wet mix; weigh duck fat",
+        "-1 1/2 hours, crisp confit, hold uncovered at 140°F; take first wet mix out of reefer",
+        "-1 hours, heat irons; mix first half of batter, rest 15 minutes, bake; mix second half 20 minutes later; quarter, trim square, rack at 200°F",
+        "0 hours, recrisp 25 squares at 400°F 3 minutes, top, and pass each tray within 10 minutes"
+      ]
+    },
+    "Duck Empanadas": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, move 1 Base A confit pack to reefer to thaw",
+        "-1 days, make filling per SOP, cool to 41°F, fold in cheese and green onion",
+        "-2 hours, roll and cut dough, fill, crimp, and vent 48 empanadas, chill at least 15 minutes; preheat oven to 400°F during the chill",
+        "-20 minutes, egg wash and rub, bake first pan 12-15 minutes to 165°F, rest 3-5 minutes",
+        "0 hours, tray 16 with salsa verde and pass; bake in waves"
+      ]
+    },
+    "Duck Nachos, Three Ways": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, move 3 Base A confit packs to reefer to thaw",
+        "-1 days, fry duck fat chips, salt, cool, store airtight",
+        "-1 days, make queso, mornay, and Asian glaze; toast and grind Szechuan pepper",
+        "-6 hours, cold garnish mise per SOP: napa, scallions, cilantro, drained pickles and pico, olives, cheeses, squeeze bottles",
+        "-1 hours, load 5 chips in each Asian and Mexican boat",
+        "-45 minutes, reheat queso, mornay, glaze, and beans to 165°F; crisp confit, hold at 200°F; salamander on",
+        "0 hours, build each wave to order, out within 2 minutes; discard at 6 minutes"
+      ]
+    },
+    "Duck Prosciutto": {
+      "course": "appetizers",
+      "_note": "Starts at -21 days, not the book calendar's -7: 24 hour cure, 7-14 day hang to 30 percent loss, 5 day rest. Finished whole breasts hold 60 days, so one batch can cover several dinners.",
+      "tasks": [
+        "-21 days, start the curing chamber; trim and weigh breasts, cure in Prague Powder #2 salt box 24 hours",
+        "-20 days, rinse, season, wrap in cheesecloth, hang; weigh every 2 days until 30 percent loss",
+        "-6 days, by now: confirm 70 percent weight, vacuum seal, rest 5 days in reefer",
+        "-1 days, drain ricotta overnight; bake crostini; fill fig jam and pomegranate molasses bottles; shave Parmigiano",
+        "-6 hours, slice prosciutto paper thin, layer on parchment; pick mint",
+        "-30 minutes, build the first trays",
+        "0 hours, pass cold; build 1-2 trays at a time, each within 30 minutes of passing"
+      ]
+    },
+    "Duck Roll Ups": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, move 2 Base A confit packs to reefer to thaw",
+        "-1 days, crisp and cool confit; toast pecans; cut fruit, greens, and scallions; drain pickled onion; build 5 kits",
+        "-1 days, make goat cheese spread; spread, fill, and roll 5 wraps; chill overnight",
+        "-2 hours, slice rolls cold, 10 per roll; tray and hold covered at 41°F",
+        "0 hours, pass cold"
+      ]
+    },
+    "Duck Southwest Egg Rolls": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, move 3 Base A confit packs, frozen corn, and 60 wrappers to reefer to thaw",
+        "-1 days, roast corn, char poblanos, prep beans and aromatics, cook filling per SOP, cool to 41°F",
+        "-1 days, squeeze filling, return the reduced liquid, fold in Jack, lime, and cornstarch",
+        "-1 days, roll 50 egg rolls, freeze 2 hours, bag 10 per bag marked Southwest",
+        "-1 days, make cilantro lime crema",
+        "-30 minutes, heat fryer to 340°F; fry a test roll, check 165°F",
+        "-20 minutes, fry 8 at a time from frozen, 7 minutes; rest 2 minutes; cut on the bias",
+        "0 hours, tray 20 halves around crema and pass; fry in waves"
+      ]
+    },
+    "Duck Tamales": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, move 2 Base A confit packs and 2.16 kg Base B stock to reefer to thaw",
+        "-1 days, soak husks; toast chiles; make red chile sauce per SOP, split filling and topping portions",
+        "-1 days, mix filling and chill; make masa, pass the float test; fill and fold 50 tamales",
+        "-1 days, steam 60-75 minutes to 165°F, rest 15 minutes, cool on racks, pack and refrigerate",
+        "-1 days, fill crema squeeze bottle; crumble cotija",
+        "-1 hours, pick cilantro, cut limes, fill salsa verde ramekins",
+        "-30 minutes, resteam tamales 20 minutes to 165°F; heat topping sauce to 165°F; hold at 135°F",
+        "0 hours, top and pass each tray of 10 within 15 minutes"
+      ]
+    },
+    "Duck Tender Pow Pow": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, thaw duck breasts in reefer",
+        "-1 days, trim and cut 50 strips of 36 g, hold covered in reefer",
+        "-1 days, make pow pow sauce; toast sesame seeds",
+        "-8 hours, marinate strips in buttermilk (4-12 hours)",
+        "-1 hours, portion pow pow into wave cups; slice scallions, pick cilantro",
+        "-45 minutes, dredge strips, rest on racks at least 10 minutes; discard marinade; heat fryer to 350°F",
+        "0 hours, fry each wave 3-4 minutes to 155°F, toss in sauce, garnish, pass within 60 seconds"
+      ]
+    },
+    "Duck Wings, Three Sauces": {
+      "course": "appetizers",
+      "tasks": [
+        "-3 days, move wings to reefer to thaw",
+        "-2 days, segment wings, bag tips for Base B, cure on racks uncovered 12 hours overnight",
+        "-1 days, confit wings at 300°F 2-2 1/2 hours, cool in fat, rack uncovered overnight; strain fat",
+        "-1 days, make blackberry BBQ and Asian sauces, quarter batches",
+        "-45 minutes, cut scallion, chive, celery, and carrot sticks; fill blue cheese ramekins",
+        "-30 minutes, heat fryer to 375°F; reheat BBQ and Asian sauces to 165°F; make Classic hot sauce, hold at 140°F",
+        "0 hours, fry each basket 4-5 minutes, toss, tray one flavor each, and pass"
+      ]
+    },
+    "Fried Duck Tenders": {
+      "course": "appetizers",
+      "tasks": [
+        "-2 days, thaw duck breasts in reefer",
+        "-1 days, make hot honey, sour cherry mustard, and pepper gravy",
+        "-1 days, trim and cut 51 strips of 35 g",
+        "-8 1/2 hours, make brine, chill over ice to 41°F",
+        "-8 hours, brine strips 6 hours, never past 8",
+        "-2 hours, drain and dry strips; double dredge, rest 15 minutes on racks, hold cold",
+        "-30 minutes, heat fryer to 350°F; reheat gravy to 165°F; bring honey and mustard to room temp",
+        "0 hours, fry each wave 3-4 minutes to 155°F, rest 1 minute, salt, pass with 3 sauces"
+      ]
+    },
+    "Smoked Duck Breast": {
+      "course": "appetizers",
+      "tasks": [
+        "-4 days, build cure brine with Prague Powder #1 per SOP, chill overnight",
+        "-3 days, trim and score duck breasts; brine 12-18 hours overnight",
+        "-2 days, rinse and rack duck uncovered for the pellicle in the morning; smoke at 185°F to 165°F in the afternoon; cool, rest overnight",
+        "-1 days, make cherry glaze; bake rye crisps; whip goat cheese; shave red cabbage",
+        "-2 hours, slice duck cold 1/8 in into 50 sets of 20 g; cut chive batons",
+        "-30 minutes, set glaze out; build canapés 25 per tray",
+        "0 hours, pass cold; trays hold 3 hours"
+      ]
+    },
+    "3 Cheese Spinach Dip": {
+      "course": "appetizers",
+      "_note": "Chef's call of 2026-10-25: made at -3 days and stored. The SOP allows 4 days counting the make day, so service day is the last day. The spinach thaw takes up to 48 hours.",
+      "tasks": [
+        "-5 days, move frozen spinach to reefer to thaw in its package, in a drip pan",
+        "-3 days, make the dip per SOP, cool in shallow pans, store in reefer",
+        "-45 minutes, reheat dip on low to 165°F, stirring; never let it bubble",
+        "-10 minutes, pan 6 lb per half hotel, hold covered at 135°F, stir every 15-20 minutes",
+        "0 hours, serve with dippers"
+      ]
+    },
+
     "Five Oaks Ranch Salad": {
       "course": "salad",
       "_note": "Chef's call of 2026-10-25: this is FiveOaks_SOP_Spring_Mix_Salad_with_Peppercorn_Ranch_Dressing. Chef added the SOP's vegetable prep at -1 hour and kept his lettuce tasks as written; the SOP itself is unchanged (it says ready-to-eat spring mix is not rewashed).",
