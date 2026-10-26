@@ -373,7 +373,7 @@ All menu edits go in `data/menu.json`. The script needs no changes.
   `desserts` with `name`, a `short` name for headers, and its `components` in plating
   order. Meal keys are numbers. Salad, soup, and dessert keys are lowercase with hyphens.
   Then add its card to `references/selection_menu.md` with the same key.
-- **Appetizers:** the `appetizers` map (Chef, 2026-10-25) holds 24 dishes, each with a
+- **Appetizers:** the `appetizers` map (Chef, 2026-10-25) holds 25 dishes, each with a
   `category` (`duck` or `non-duck`), `name`, `short`, and `components`. Each component has
   `"course": "appetizers"`, which keys off 6:00 PM, and its tasks come from the dish's html
   SOP in `/Users/cheflance/Five_Oaks/SOP`. To add a Non-duck appetizer, add its component
@@ -448,7 +448,9 @@ which is the source of truth. Never re-import from the .docx, or they will be lo
     left off. The strawberry sauce always gets the SOP's optional lemon zest, so its task
     reads "make the SOP, including the lemon zest."
   - **Appetizer course** (added the same day): 23 Duck appetizers and one Non-duck (3
-    Cheese Spinach Dip), one of each per dinner. Their prep lists carry Chef's calls: pizza
+    Cheese Spinach Dip), one of each per dinner. A second Non-duck, the Wild Mushroom &
+    Gruyère Tart, was added on 2026-10-26 from its new SOP: pastry thaw at -2 days, all
+    components at -1 day, shells par-baked at -3 hours, tarts baked at -20 minutes. Their prep lists carry Chef's calls: pizza
     and flatbread toppings at -2 days, spinach dip made at -3 days, prosciutto started at
     -21 days.
   - **House Bacon Salad:** unchanged on purpose. Chef keeps tempering the spinach at -1 hour,

@@ -9,7 +9,7 @@
   },
   "_service_times_note": "Chef's times (2026-10-22): appetizers 6 PM, salad or soup 7 PM, entrees 7:30 PM, dessert 8 PM. Entrees were 7 PM and dessert 7:30 PM until the Salad or Soup course was added.",
 
-  "_appetizers_note": "Chef's appetizer course of 2026-10-25, served at 6 PM (course 'appetizers'). Each dinner takes one Duck and one Non-duck appetizer, or none of either (request fields appetizer_duck and appetizer_nonduck). Every task comes from the dish's html SOP in /Users/cheflance/Five_Oaks/SOP (reports/SOP Prep Activities by Dish.md in the Five Oaks workspace), with Chef's 10/25 calls: pizza and flatbread toppings at -2 days, spinach dip made at -3 days, prosciutto started at -21 days. Non-duck appetizers will be added later.",
+  "_appetizers_note": "Chef's appetizer course of 2026-10-25, served at 6 PM (course 'appetizers'). Each dinner takes one Duck and one Non-duck appetizer, or none of either (request fields appetizer_duck and appetizer_nonduck). Every task comes from the dish's html SOP in /Users/cheflance/Five_Oaks/SOP (reports/SOP Prep Activities by Dish.md in the Five Oaks workspace), with Chef's 10/25 calls: pizza and flatbread toppings at -2 days, spinach dip made at -3 days, prosciutto started at -21 days. Non-duck appetizers will be added later; the Wild Mushroom & Gruyère Tart joined the 3 Cheese Spinach Dip on 2026-10-26.",
   "appetizers": {
     "asian-grilled-duck": { "category": "duck", "name": "Asian Grilled Duck", "short": "Asian Grilled Duck", "components": ["Asian Grilled Duck"] },
     "bbq-duck-breast": { "category": "duck", "name": "BBQ Duck Breast", "short": "BBQ Duck", "components": ["BBQ Duck Breast"] },
@@ -34,7 +34,8 @@
     "duck-wings-three-sauces": { "category": "duck", "name": "Duck Wings, Three Sauces", "short": "Duck Wings", "components": ["Duck Wings, Three Sauces"] },
     "fried-duck-tenders": { "category": "duck", "name": "Fried Duck Tenders", "short": "Duck Tenders", "components": ["Fried Duck Tenders"] },
     "smoked-duck-breast": { "category": "duck", "name": "Smoked Duck Breast", "short": "Smoked Duck", "components": ["Smoked Duck Breast"] },
-    "three-cheese-spinach-dip": { "category": "non-duck", "name": "3 Cheese Spinach Dip", "short": "Spinach Dip", "components": ["3 Cheese Spinach Dip"] }
+    "three-cheese-spinach-dip": { "category": "non-duck", "name": "3 Cheese Spinach Dip", "short": "Spinach Dip", "components": ["3 Cheese Spinach Dip"] },
+    "wild-mushroom-gruyere-tart": { "category": "non-duck", "name": "Wild Mushroom & Gruyère Tart", "short": "Mushroom Tart", "components": ["Wild Mushroom & Gruyère Tart"] }
   },
 
   "_salads_soups_note": "Salads & Soups is part of the dinner, one choice per night, served at 7 PM (course 'salad'). Appetizers are separate. Chef's list of 2026-10-23, numbered as he numbered it. That list replaced the SOP-derived gumbo tasks of 2026-10-22.",
@@ -410,6 +411,24 @@
         "-45 minutes, reheat dip on low to 165°F, stirring; never let it bubble",
         "-10 minutes, pan 6 lb per half hotel, hold covered at 135°F, stir every 15-20 minutes",
         "0 hours, serve with dippers"
+      ]
+    },
+    "Wild Mushroom & Gruyère Tart": {
+      "course": "appetizers",
+      "_note": "Added 2026-10-26 from FiveOaks_SOP_Wild_Mushroom_and_Gruyere_Tart_Madeira_Thyme_Reduction, on its own timing: pastry thaws at -2 days; everything else is made at -1 day (filling, Gruyère cream, stock, and reduction base hold 3 days, cut shells 24 hours); shells par-bake at -3 hours (SOP window 2-4 hours); tarts are assembled at -35 minutes and baked at -20 minutes so the 3 minute rest ends at 6:00 PM. One SOP batch is 12 tarts, 1 per guest.",
+      "tasks": [
+        "-2 days, move puff pastry from freezer to reefer to thaw, still wrapped: 900 g per SOP batch of 12 tarts, 1 tart per guest",
+        "-1 days, clean and slice mushrooms per SOP, saving stems and trim; make house mushroom stock, strain to 700 g, cool",
+        "-1 days, make Gruyère cream; grate and hold 60 g Gruyère for the tops; refrigerate",
+        "-1 days, cook mushroom filling dry per SOP, taste salt with the Gruyère cream, cool, reserve 3 top pieces per tart, label the per-tart weight",
+        "-1 days, roll, cut, score, dock, and egg wash puff shells; cover and refrigerate on the pans",
+        "-1 days, make Madeira-thyme reduction base to 300 g, cool, refrigerate",
+        "-3 hours, preheat convection oven to 385°F; par-bake shells 10-12 minutes, press centers flat, cool on rack, hold uncovered",
+        "-50 minutes, pull mushroom filling and Gruyère cream from reefer so the cream spreads",
+        "-35 minutes, assemble tarts: 35 g Gruyère cream, filling per label, 3 top pieces, 5 g Gruyère",
+        "-30 minutes, reheat reduction base to 165°F, mount with cold butter, add sherry vinegar, season; hold at 135-150°F",
+        "-20 minutes, bake tarts at 385°F convection 12-16 minutes to 165°F center; rest 3 minutes",
+        "0 hours, plate tart off-center with 30 g reduction beside, not under; chives, microgreens, olive oil drops"
       ]
     },
 
